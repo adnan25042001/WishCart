@@ -91,7 +91,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 
 		Admin adm = new Admin();
 
-		adm.setCompanyAddress(admin.getCompanyAddress());
+		adm.setCompanyAddress(admin.getCompanyName());
 		adm.setCompanyName(admin.getCompanyName());
 		adm.setEmail(admin.getEmail());
 		adm.setMobile(admin.getMobile());

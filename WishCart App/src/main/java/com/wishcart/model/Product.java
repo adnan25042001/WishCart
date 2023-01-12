@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,13 +23,23 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer productId;
 
+	@NotNull
 	private String productName;
-	private String Images;
+
+	@NotNull
+	private String Image1;
+	private String Image2;
+	private String Image3;
+
+	@NotNull
+	@Min(value = 0, message = "price should be greater than 0")
 	private Double price;
 	private String description;
-//	private Integer quantity;
+	@NotNull
+	@Min(value = 0, message = "price should be greater than 0")
+	private Integer quantity;
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	Category category;
 
 }

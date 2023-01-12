@@ -3,19 +3,27 @@ package com.wishcart.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.wishcart.exception.AdminException;
+import com.wishcart.exception.CategoryException;
 import com.wishcart.exception.ProductException;
+import com.wishcart.model.Category;
 import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Product;
 import com.wishcart.repository.AdminDao;
+import com.wishcart.repository.CategoryDao;
 import com.wishcart.repository.CurrentUserSessionDao;
 import com.wishcart.repository.ProductDao;
 
+@Service
 public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductDao pdao;
+	
+	@Autowired
+	private CategoryDao cdao;
 
 	@Autowired
 	private AdminDao adao;
@@ -24,12 +32,16 @@ public class ProductServiceImpl implements ProductService {
 	private CurrentUserSessionDao cusdao;
 
 	@Override
-	public Product addProduct(Product product, String authKey) {
+	public Product addProduct(Product product, Integer cat_id, String authKey) {
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
 
 		adao.findByEmail(cus.getEmail()).orElseThrow(() -> new AdminException("Invalid auth Key : " + authKey));
+		
+		Category category = cdao.findById(cat_id).orElseThrow(() -> new CategoryException("Category not found with cat_id : " + cat_id));
 
+		product.setCategory(category);
+		
 		return pdao.save(product);
 	}
 

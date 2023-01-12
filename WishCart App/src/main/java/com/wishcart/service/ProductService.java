@@ -7,7 +7,7 @@ import com.wishcart.model.Product;
 
 public interface ProductService {
 
-	public Product addProduct(Product product, String authKey);
+	public Product addProduct(Product product, Integer cat_id, String authKey);
 
 	public Product removeProduct(Integer id, String authKey) throws ProductException;
 

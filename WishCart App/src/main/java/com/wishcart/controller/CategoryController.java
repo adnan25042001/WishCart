@@ -10,14 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wishcart.model.Category;
 import com.wishcart.service.CategoryService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/wishcart")
@@ -28,6 +27,8 @@ public class CategoryController {
 
 	@PostMapping("/addcategory")
 	public ResponseEntity<Category> addCategoryHandler(@RequestBody @Valid Category category) {
+		System.out.println(category.getName());
+		System.out.println(category.getDescription());
 		return new ResponseEntity<Category>(cs.addCategory(category), HttpStatus.CREATED);
 	}
 

@@ -8,11 +8,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
@@ -24,16 +26,17 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer cid;
 
-	@NotBlank
+	@NonNull
 	private String name;
 
-	@NotBlank
+	@NonNull
 	private String description;
 
-	@NotBlank
+	@NonNull
 	private String img;
 
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="category")
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
 	private List<Product> products;
 
 }
