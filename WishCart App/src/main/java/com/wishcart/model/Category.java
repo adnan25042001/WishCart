@@ -27,7 +27,7 @@ public class Category {
 	private Integer cid;
 
 	@NonNull
-	private String name;
+	private String categoryName;
 
 	@NonNull
 	private String description;

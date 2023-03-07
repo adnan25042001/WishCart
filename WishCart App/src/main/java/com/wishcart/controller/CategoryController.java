@@ -19,30 +19,31 @@ import com.wishcart.model.Category;
 import com.wishcart.service.CategoryService;
 
 @RestController
-@RequestMapping("/wishcart")
+@RequestMapping("/wishcart/category")
 public class CategoryController {
 
 	@Autowired
 	private CategoryService cs;
 
-	@PostMapping("/addcategory")
+	@PostMapping("/add")
 	public ResponseEntity<Category> addCategoryHandler(@RequestBody @Valid Category category) {
-		System.out.println(category.getName());
+		System.out.println(category.getCategoryName());
 		System.out.println(category.getDescription());
 		return new ResponseEntity<Category>(cs.addCategory(category), HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/removecategory?cat_id")
+	@DeleteMapping("/remove?cat_id")
 	public ResponseEntity<Category> removeategoryHandler(@RequestParam("cat_id") Integer id) {
 		return new ResponseEntity<Category>(cs.removeCategory(id), HttpStatus.CREATED);
 	}
 
-	@PostMapping("/updatecategory")
+	@PostMapping("/update")
 	public ResponseEntity<Category> updateCategoryHandler(@RequestBody @Valid Category category) {
 		return new ResponseEntity<Category>(cs.updateCategory(category), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/allCategory")
+//	get all category
+	@GetMapping("")
 	public ResponseEntity<List<Category>> getAllCategoryHandler() {
 		return new ResponseEntity<List<Category>>(cs.getAllCategory(), HttpStatus.OK);
 	}

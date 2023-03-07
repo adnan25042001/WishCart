@@ -1,6 +1,7 @@
 package com.wishcart.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category addCategory(Category category) {
+
+		Optional<Category> opt = cdao.findByCategoryName(category.getCategoryName());
+
+		if (opt.isPresent())
+			throw new CategoryException("This category is already present");
+
 		return cdao.save(category);
 	}
 
