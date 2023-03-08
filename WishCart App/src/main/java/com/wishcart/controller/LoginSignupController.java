@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.wishcart.model.AdminSignupDTO;
 import com.wishcart.model.CustomerSignupDTO;
 import com.wishcart.model.SessionDTO;
 import com.wishcart.model.UserDTO;
@@ -52,14 +50,14 @@ public class LoginSignupController {
 
 	}
 
-	@PostMapping("/signup/admin")
-	public ResponseEntity<SessionDTO> signupHandler(@Valid @RequestBody AdminSignupDTO admin) {
-
-		SessionDTO sdt = lss.adminSignup(admin);
-
-		return new ResponseEntity<SessionDTO>(sdt, HttpStatus.CREATED);
-
-	}
+//	@PostMapping("/signup/admin")
+//	public ResponseEntity<SessionDTO> signupHandler(@Valid @RequestBody AdminSignupDTO admin) {
+//
+//		SessionDTO sdt = lss.adminSignup(admin);
+//
+//		return new ResponseEntity<SessionDTO>(sdt, HttpStatus.CREATED);
+//
+//	}
 
 	@DeleteMapping("/logout/{authkey}")
 	public ResponseEntity<String> logout(@PathVariable("authkey") String authKey) {

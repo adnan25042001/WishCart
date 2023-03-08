@@ -29,12 +29,12 @@ public class CategoryController {
 	public ResponseEntity<Category> addCategoryHandler(@RequestBody @Valid Category category) {
 		System.out.println(category.getCategoryName());
 		System.out.println(category.getDescription());
-		return new ResponseEntity<Category>(cs.addCategory(category), HttpStatus.CREATED);
+		return new ResponseEntity<Category>(cs.addCategory(category), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/remove?cat_id")
 	public ResponseEntity<Category> removeategoryHandler(@RequestParam("cat_id") Integer id) {
-		return new ResponseEntity<Category>(cs.removeCategory(id), HttpStatus.CREATED);
+		return new ResponseEntity<Category>(cs.removeCategory(id), HttpStatus.OK);
 	}
 
 	@PostMapping("/update")
@@ -42,8 +42,7 @@ public class CategoryController {
 		return new ResponseEntity<Category>(cs.updateCategory(category), HttpStatus.CREATED);
 	}
 
-//	get all category
-	@GetMapping("")
+	@GetMapping("/all")
 	public ResponseEntity<List<Category>> getAllCategoryHandler() {
 		return new ResponseEntity<List<Category>>(cs.getAllCategory(), HttpStatus.OK);
 	}

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.wishcart.exception.AdminException;
 import com.wishcart.exception.CustomerException;
 import com.wishcart.model.Admin;
-import com.wishcart.model.AdminSignupDTO;
 import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Customer;
 import com.wishcart.model.CustomerSignupDTO;
@@ -74,46 +73,46 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 
 	}
 
-	@Override
-	public SessionDTO adminSignup(AdminSignupDTO admin) throws AdminException {
-
-		Optional<Admin> opt = adao.findByEmail(admin.getEmail());
-
-		Optional<Customer> opt1 = cdao.findByEmail(admin.getEmail());
-
-		if (opt.isPresent())
-			throw new AdminException("account already exist with email : " + admin.getEmail());
-
-		if (opt1.isPresent())
-			throw new AdminException("account already exist with email : " + admin.getEmail());
-
-		SessionDTO sdt = new SessionDTO();
-
-		Admin adm = new Admin();
-
-		adm.setCompanyAddress(admin.getCompanyName());
-		adm.setCompanyName(admin.getCompanyName());
-		adm.setEmail(admin.getEmail());
-		adm.setMobile(admin.getMobile());
-		adm.setName(admin.getName());
-		adm.setPassword(admin.getPassword());
-
-		adao.save(adm);
-
-		sdt.setAuthkey(RandomString.make(6));
-		sdt.setSessionTime(LocalDateTime.now());
-
-		CurrentUserSession cus = new CurrentUserSession();
-		cus.setAuthKey(sdt.getAuthkey());
-		cus.setEmail(admin.getEmail());
-		cus.setSessionTime(sdt.getSessionTime());
-		cus.setUserType(UserType.ADMIN);
-
-		cusdao.save(cus);
-
-		return sdt;
-
-	}
+//	@Override
+//	public SessionDTO adminSignup(AdminSignupDTO admin) throws AdminException {
+//
+//		Optional<Admin> opt = adao.findByEmail(admin.getEmail());
+//
+//		Optional<Customer> opt1 = cdao.findByEmail(admin.getEmail());
+//
+//		if (opt.isPresent())
+//			throw new AdminException("account already exist with email : " + admin.getEmail());
+//
+//		if (opt1.isPresent())
+//			throw new AdminException("account already exist with email : " + admin.getEmail());
+//
+//		SessionDTO sdt = new SessionDTO();
+//
+//		Admin adm = new Admin();
+//
+//		adm.setCompanyAddress(admin.getCompanyName());
+//		adm.setCompanyName(admin.getCompanyName());
+//		adm.setEmail(admin.getEmail());
+//		adm.setMobile(admin.getMobile());
+//		adm.setName(admin.getName());
+//		adm.setPassword(admin.getPassword());
+//
+//		adao.save(adm);
+//
+//		sdt.setAuthkey(RandomString.make(6));
+//		sdt.setSessionTime(LocalDateTime.now());
+//
+//		CurrentUserSession cus = new CurrentUserSession();
+//		cus.setAuthKey(sdt.getAuthkey());
+//		cus.setEmail(admin.getEmail());
+//		cus.setSessionTime(sdt.getSessionTime());
+//		cus.setUserType(UserType.ADMIN);
+//
+//		cusdao.save(cus);
+//
+//		return sdt;
+//
+//	}
 
 	@Override
 	public SessionDTO loginAdmin(UserDTO user) throws AdminException {
