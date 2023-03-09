@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductDao pdao;
-	
+
 	@Autowired
 	private CategoryDao cdao;
 
@@ -33,20 +33,24 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product addProduct(Product product, Integer cat_id, String authKey) {
+
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
 
 		adao.findByEmail(cus.getEmail()).orElseThrow(() -> new AdminException("Invalid auth Key : " + authKey));
-		
-		Category category = cdao.findById(cat_id).orElseThrow(() -> new CategoryException("Category not found with cat_id : " + cat_id));
+
+		Category category = cdao.findById(cat_id)
+				.orElseThrow(() -> new CategoryException("Category not found with cat_id : " + cat_id));
 
 		product.setCategory(category);
-		
+
 		return pdao.save(product);
+
 	}
 
 	@Override
 	public Product removeProduct(Integer id, String authKey) throws ProductException {
+
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
 
@@ -57,10 +61,12 @@ public class ProductServiceImpl implements ProductService {
 		pdao.delete(product);
 
 		return product;
+
 	}
 
 	@Override
 	public Product getProductById(Integer id, String authKey) throws ProductException {
+
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
 
@@ -69,6 +75,7 @@ public class ProductServiceImpl implements ProductService {
 		Product product = pdao.findById(id).orElseThrow(() -> new ProductException("Invalid Product Id : " + id));
 
 		return product;
+
 	}
 
 	@Override
@@ -81,10 +88,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getProductBetweenPrice(Double minPrice, Double maxPrice) throws ProductException {
+
 		List<Product> products = pdao.findByPriceBetween(minPrice, maxPrice);
 		if (products.isEmpty())
 			throw new ProductException("Product not found between : " + minPrice + " and " + maxPrice);
 		return products;
+
 	}
 
 	@Override
@@ -97,6 +106,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product updateProduct(Product product, String authKey) throws ProductException {
+
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
 
@@ -106,10 +116,12 @@ public class ProductServiceImpl implements ProductService {
 				.orElseThrow(() -> new ProductException("Invalid product Id : " + product.getProductId()));
 
 		return pdao.save(product);
+
 	}
 
 	@Override
 	public Product updateProductPrice(Integer id, Double price, String authKey) throws ProductException {
+
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
 
@@ -120,6 +132,7 @@ public class ProductServiceImpl implements ProductService {
 		prod.setPrice(price);
 
 		return pdao.save(prod);
+
 	}
 
 }
