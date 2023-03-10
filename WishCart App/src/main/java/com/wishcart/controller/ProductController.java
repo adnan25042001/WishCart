@@ -73,4 +73,9 @@ public class ProductController {
 		return new ResponseEntity<Product>(ps.updateProductPrice(id, price, authKey), HttpStatus.CREATED);
 	}
 
+	@GetMapping("/productbycategoryid/{cid}")
+	public ResponseEntity<List<ProductDto>> getProductByCategoryIdHandler(@PathVariable("cid") Integer cid) {
+		return new ResponseEntity<List<ProductDto>>(ps.getProductsByCategoryId(cid), HttpStatus.OK);
+	}
+
 }

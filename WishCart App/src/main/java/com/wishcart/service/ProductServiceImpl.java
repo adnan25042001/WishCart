@@ -1,5 +1,6 @@
 package com.wishcart.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,8 @@ public class ProductServiceImpl implements ProductService {
 
 		adao.findByEmail(cus.getEmail()).orElseThrow(() -> new AdminException("Invalid auth Key : " + authKey));
 
-		Category category = cdao.findById(product.getCategory_id()).orElseThrow(
-				() -> new CategoryException("Category not found with cat_id : " + product.getCategory_id()));
+		Category category = cdao.findById(product.getCategory_cid()).orElseThrow(
+				() -> new CategoryException("Category not found with cat_id : " + product.getCategory_cid()));
 
 		Product prod = new Product();
 
@@ -150,6 +151,39 @@ public class ProductServiceImpl implements ProductService {
 		prod.setPrice(price);
 
 		return pdao.save(prod);
+
+	}
+
+	@Override
+	public List<ProductDto> getProductsByCategoryId(Integer cid) throws ProductException, CategoryException {
+
+		cdao.findById(cid).orElseThrow(() -> new CategoryException("Invalid Category Id"));
+
+		List<Product> products = pdao.findAll();
+
+		List<ProductDto> productList = new ArrayList<>();
+
+		for (Product p : products) {
+			if (p.getCategory().getCid() == cid) {
+				ProductDto prod = new ProductDto();
+				prod.setCategory_cid(cid);
+				prod.setDescription(p.getDescription());
+				prod.setImage1(p.getImage1());
+				prod.setImage2(p.getImage2());
+				prod.setImage3(p.getImage3());
+				prod.setPrice(p.getPrice());
+				prod.setProductId(p.getProductId());
+				prod.setProductName(p.getProductName());
+				prod.setQuantity(p.getQuantity());
+
+				productList.add(prod);
+			}
+		}
+
+		if (productList.size() == 0)
+			throw new ProductException("Product not found");
+
+		return productList;
 
 	}
 
