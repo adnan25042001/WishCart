@@ -1,10 +1,10 @@
 package com.wishcart.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -39,7 +39,8 @@ public class Product {
 	@Min(value = 0, message = "price should be greater than 0")
 	private Integer quantity;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
+	@JoinColumn(name = "category_cid")
 	Category category;
 
 }

@@ -1,4 +1,4 @@
-package com.wishcart.model;
+package com.wishcart.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class UserDto {
 
 	@NotBlank
 	@NotEmpty

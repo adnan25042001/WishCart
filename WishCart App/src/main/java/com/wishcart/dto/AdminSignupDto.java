@@ -1,4 +1,4 @@
-package com.wishcart.model;
+package com.wishcart.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminSignupDTO {
+public class AdminSignupDto {
 
 	@NotBlank
 	@NotEmpty

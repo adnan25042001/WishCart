@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wishcart.dto.ProductDto;
 import com.wishcart.exception.AdminException;
 import com.wishcart.exception.CategoryException;
 import com.wishcart.exception.ProductException;
@@ -32,19 +33,28 @@ public class ProductServiceImpl implements ProductService {
 	private CurrentUserSessionDao cusdao;
 
 	@Override
-	public Product addProduct(Product product, Integer cat_id, String authKey) {
+	public Product addProduct(ProductDto product, String authKey) {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
 
 		adao.findByEmail(cus.getEmail()).orElseThrow(() -> new AdminException("Invalid auth Key : " + authKey));
 
-		Category category = cdao.findById(cat_id)
-				.orElseThrow(() -> new CategoryException("Category not found with cat_id : " + cat_id));
+		Category category = cdao.findById(product.getCategory_id()).orElseThrow(
+				() -> new CategoryException("Category not found with cat_id : " + product.getCategory_id()));
 
-		product.setCategory(category);
+		Product prod = new Product();
 
-		return pdao.save(product);
+		prod.setCategory(category);
+		prod.setDescription(product.getDescription());
+		prod.setImage1(product.getImage1());
+		prod.setImage2(product.getImage2());
+		prod.setImage3(product.getImage3());
+		prod.setPrice(product.getPrice());
+		prod.setProductName(product.getProductName());
+		prod.setQuantity(product.getQuantity());
+
+		return pdao.save(prod);
 
 	}
 
@@ -105,17 +115,25 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product updateProduct(Product product, String authKey) throws ProductException {
+	public Product updateProduct(ProductDto product, String authKey) throws ProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
 
 		adao.findByEmail(cus.getEmail()).orElseThrow(() -> new AdminException("Invalid auth Key : " + authKey));
 
-		pdao.findById(product.getProductId())
+		Product prod = pdao.findById(product.getProductId())
 				.orElseThrow(() -> new ProductException("Invalid product Id : " + product.getProductId()));
 
-		return pdao.save(product);
+		prod.setDescription(product.getDescription());
+		prod.setImage1(product.getImage1());
+		prod.setImage2(product.getImage2());
+		prod.setImage3(product.getImage3());
+		prod.setPrice(product.getPrice());
+		prod.setProductName(product.getProductName());
+		prod.setQuantity(product.getQuantity());
+
+		return pdao.save(prod);
 
 	}
 

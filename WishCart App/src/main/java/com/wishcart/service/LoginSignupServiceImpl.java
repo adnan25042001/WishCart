@@ -6,14 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wishcart.dto.CustomerSignupDto;
+import com.wishcart.dto.SessionDto;
+import com.wishcart.dto.UserDto;
 import com.wishcart.exception.AdminException;
 import com.wishcart.exception.CustomerException;
 import com.wishcart.model.Admin;
 import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Customer;
-import com.wishcart.model.CustomerSignupDTO;
-import com.wishcart.model.SessionDTO;
-import com.wishcart.model.UserDTO;
 import com.wishcart.model.UserType;
 import com.wishcart.repository.AdminDao;
 import com.wishcart.repository.CurrentUserSessionDao;
@@ -34,7 +34,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 	private CurrentUserSessionDao cusdao;
 
 	@Override
-	public SessionDTO customerSignup(CustomerSignupDTO customer) throws CustomerException {
+	public SessionDto customerSignup(CustomerSignupDto customer) throws CustomerException {
 
 		Optional<Customer> opt = cdao.findByEmail(customer.getEmail());
 
@@ -46,7 +46,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 		if (opt1.isPresent())
 			throw new CustomerException("account already exist with email : " + customer.getEmail());
 
-		SessionDTO sdt = new SessionDTO();
+		SessionDto sdt = new SessionDto();
 
 		Customer cust = new Customer();
 
@@ -115,7 +115,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 //	}
 
 	@Override
-	public SessionDTO loginAdmin(UserDTO user) throws AdminException {
+	public SessionDto loginAdmin(UserDto user) throws AdminException {
 
 		Optional<Admin> opt = adao.findByEmail(user.getEmail());
 
@@ -132,7 +132,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 		if (opt1.isPresent())
 			throw new AdminException("Admin already logged in!");
 
-		SessionDTO sdt = new SessionDTO();
+		SessionDto sdt = new SessionDto();
 		sdt.setAuthkey(RandomString.make(6));
 		sdt.setSessionTime(LocalDateTime.now());
 
@@ -149,7 +149,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 	}
 
 	@Override
-	public SessionDTO loginCustomer(UserDTO user) throws CustomerException {
+	public SessionDto loginCustomer(UserDto user) throws CustomerException {
 
 		System.out.println(user);
 
@@ -167,7 +167,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 
 		}
 
-		SessionDTO sdt = new SessionDTO();
+		SessionDto sdt = new SessionDto();
 		sdt.setAuthkey(RandomString.make(6));
 		sdt.setSessionTime(LocalDateTime.now());
 

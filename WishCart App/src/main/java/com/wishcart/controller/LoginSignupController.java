@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.wishcart.model.CustomerSignupDTO;
-import com.wishcart.model.SessionDTO;
-import com.wishcart.model.UserDTO;
+
+import com.wishcart.dto.CustomerSignupDto;
+import com.wishcart.dto.SessionDto;
+import com.wishcart.dto.UserDto;
 import com.wishcart.service.LoginSignupService;
 
 @RestController
@@ -24,29 +25,29 @@ public class LoginSignupController {
 	private LoginSignupService lss;
 
 	@PostMapping("/login/customer")
-	public ResponseEntity<SessionDTO> customerLoginHandler(@Valid @RequestBody UserDTO user) {
+	public ResponseEntity<SessionDto> customerLoginHandler(@Valid @RequestBody UserDto user) {
 
-		SessionDTO sdt = lss.loginCustomer(user);
+		SessionDto sdt = lss.loginCustomer(user);
 
-		return new ResponseEntity<SessionDTO>(sdt, HttpStatus.OK);
+		return new ResponseEntity<SessionDto>(sdt, HttpStatus.OK);
 
 	}
 
 	@PostMapping("/login/admin")
-	public ResponseEntity<SessionDTO> adminLoginHandler(@Valid @RequestBody UserDTO user) {
+	public ResponseEntity<SessionDto> adminLoginHandler(@Valid @RequestBody UserDto user) {
 
-		SessionDTO sdt = lss.loginAdmin(user);
+		SessionDto sdt = lss.loginAdmin(user);
 
-		return new ResponseEntity<SessionDTO>(sdt, HttpStatus.OK);
+		return new ResponseEntity<SessionDto>(sdt, HttpStatus.OK);
 
 	}
 
 	@PostMapping("/signup/customer")
-	public ResponseEntity<SessionDTO> signupHandler(@Valid @RequestBody CustomerSignupDTO customer) {
+	public ResponseEntity<SessionDto> signupHandler(@Valid @RequestBody CustomerSignupDto customer) {
 
-		SessionDTO sdt = lss.customerSignup(customer);
+		SessionDto sdt = lss.customerSignup(customer);
 
-		return new ResponseEntity<SessionDTO>(sdt, HttpStatus.CREATED);
+		return new ResponseEntity<SessionDto>(sdt, HttpStatus.CREATED);
 
 	}
 

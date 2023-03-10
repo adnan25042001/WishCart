@@ -27,8 +27,6 @@ public class CategoryController {
 
 	@PostMapping("/add")
 	public ResponseEntity<Category> addCategoryHandler(@RequestBody @Valid Category category) {
-		System.out.println(category.getCategoryName());
-		System.out.println(category.getDescription());
 		return new ResponseEntity<Category>(cs.addCategory(category), HttpStatus.OK);
 	}
 
