@@ -164,7 +164,7 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productList = new ArrayList<>();
 
 		for (Product p : products) {
-			if (p.getCategory().getCid() == cid) {
+			if (p.getCategory().getId() == cid) {
 				ProductDto prod = new ProductDto();
 				prod.setCategory_cid(cid);
 				prod.setDescription(p.getDescription());
@@ -172,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
 				prod.setImage2(p.getImage2());
 				prod.setImage3(p.getImage3());
 				prod.setPrice(p.getPrice());
-				prod.setProductId(p.getProductId());
+				prod.setProductId(p.getId());
 				prod.setProductName(p.getProductName());
 				prod.setQuantity(p.getQuantity());
 

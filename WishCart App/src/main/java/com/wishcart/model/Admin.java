@@ -22,7 +22,7 @@ public class Admin {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer adminId;
+	private Integer id;
 	
 	@NotNull(message = "Name should not be null!")
 	@NotBlank(message = "Name should not be blanck!")

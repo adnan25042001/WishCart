@@ -1,11 +1,14 @@
 package com.wishcart.service;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wishcart.config.MySecurityConfig;
 import com.wishcart.dto.CustomerSignupDto;
 import com.wishcart.dto.SessionDto;
 import com.wishcart.dto.UserDto;
@@ -18,8 +21,6 @@ import com.wishcart.model.UserType;
 import com.wishcart.repository.AdminDao;
 import com.wishcart.repository.CurrentUserSessionDao;
 import com.wishcart.repository.CustomerDao;
-
-import net.bytebuddy.utility.RandomString;
 
 @Service
 public class LoginSignupServiceImpl implements LoginSignupService {
@@ -54,11 +55,20 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 		cust.setEmail(customer.getEmail());
 		cust.setMobile(customer.getMobile());
 		cust.setName(customer.getName());
-		cust.setPassword(customer.getPassword());
+
+		String encryptedPassword = customer.getPassword();
+
+		try {
+			encryptedPassword = MySecurityConfig.passwordEncoder(encryptedPassword);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		cust.setPassword(encryptedPassword);
 
 		cdao.save(cust);
 
-		sdt.setAuthkey(RandomString.make(6));
+		sdt.setAuthkey(UUID.randomUUID().toString());
 		sdt.setSessionTime(LocalDateTime.now());
 
 		CurrentUserSession cus = new CurrentUserSession();
@@ -133,7 +143,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 			throw new AdminException("Admin already logged in!");
 
 		SessionDto sdt = new SessionDto();
-		sdt.setAuthkey(RandomString.make(6));
+		sdt.setAuthkey(UUID.randomUUID().toString());
 		sdt.setSessionTime(LocalDateTime.now());
 
 		CurrentUserSession cus = new CurrentUserSession();
@@ -151,13 +161,17 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 	@Override
 	public SessionDto loginCustomer(UserDto user) throws CustomerException {
 
-		System.out.println(user);
-
 		Customer customer = cdao.findByEmail(user.getEmail())
 				.orElseThrow(() -> new CustomerException("Email not found : " + user.getEmail()));
 
-		if (!customer.getPassword().equals(user.getPassword()))
-			throw new CustomerException("Wrong password!");
+		System.out.println(customer);
+
+		try {
+			if (!customer.getPassword().equals(MySecurityConfig.passwordEncoder(user.getPassword())))
+				throw new CustomerException("Wrong password!");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 
 		Optional<CurrentUserSession> opt1 = cusdao.findByEmail(user.getEmail());
 
@@ -168,7 +182,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 		}
 
 		SessionDto sdt = new SessionDto();
-		sdt.setAuthkey(RandomString.make(6));
+		sdt.setAuthkey(UUID.randomUUID().toString());
 		sdt.setSessionTime(LocalDateTime.now());
 
 		CurrentUserSession cus = new CurrentUserSession();

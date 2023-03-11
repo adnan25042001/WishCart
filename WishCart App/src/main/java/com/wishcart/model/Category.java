@@ -24,7 +24,7 @@ public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer cid;
+	private Integer id;
 
 	@NonNull
 	private String categoryName;

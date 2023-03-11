@@ -36,8 +36,8 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category updateCategory(Category category) throws CategoryException {
-		cdao.findById(category.getCid())
-				.orElseThrow(() -> new CategoryException("Invalid Category Id : " + category.getCid()));
+		cdao.findById(category.getId())
+				.orElseThrow(() -> new CategoryException("Invalid Category Id : " + category.getId()));
 		return cdao.save(category);
 	}
 
