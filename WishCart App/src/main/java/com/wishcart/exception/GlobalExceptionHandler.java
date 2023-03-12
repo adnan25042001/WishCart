@@ -93,4 +93,26 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<ExceptionDetails>(err, HttpStatus.BAD_GATEWAY);
 	}
 
+	@ExceptionHandler(CategoryException.class)
+	public ResponseEntity<ExceptionDetails> CategoryExceptionhandler(CategoryException ex, WebRequest req) {
+
+		ExceptionDetails err = new ExceptionDetails();
+		err.setTimeStamp(LocalDateTime.now());
+		err.setMessage(ex.getMessage());
+		err.setDetails(req.getDescription(false));
+
+		return new ResponseEntity<ExceptionDetails>(err, HttpStatus.BAD_GATEWAY);
+	}
+
+	@ExceptionHandler(WishlistException.class)
+	public ResponseEntity<ExceptionDetails> WishistExceptionhandler(WishlistException ex, WebRequest req) {
+
+		ExceptionDetails err = new ExceptionDetails();
+		err.setTimeStamp(LocalDateTime.now());
+		err.setMessage(ex.getMessage());
+		err.setDetails(req.getDescription(false));
+
+		return new ResponseEntity<ExceptionDetails>(err, HttpStatus.BAD_GATEWAY);
+	}
+
 }
