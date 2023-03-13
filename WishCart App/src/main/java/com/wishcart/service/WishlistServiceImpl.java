@@ -34,7 +34,7 @@ public class WishlistServiceImpl implements WishlistService {
 	private CurrentUserSessionDao cusdao;
 
 	@Override
-	public String addToWishlist(Integer productId, String authKey) throws WishlistException {
+	public String addToWishlist(Integer productId, String authKey) throws ProductException, WishlistException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -58,6 +58,26 @@ public class WishlistServiceImpl implements WishlistService {
 		wdao.save(wishlist);
 
 		return "product added to wishlist";
+
+	}
+
+	@Override
+	public String removeFromWishlist(Integer productId, String authKey) throws ProductException, WishlistException {
+
+		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
+				.orElseThrow(() -> new CustomerException("User not logged in"));
+
+		Customer customer = cdao.findByEmail(cus.getEmail())
+				.orElseThrow(() -> new CustomerException("Invalid authKey"));
+
+		pdao.findById(productId).orElseThrow(() -> new ProductException("Product not found with id : " + productId));
+
+		Wishlist wl = wdao.findByCustomer_idAndProduct_id(customer.getId(), productId)
+				.orElseThrow(() -> new WishlistException("Product not present in wishlist"));
+
+		wdao.delete(wl);
+
+		return "Product removed from wishlist";
 
 	}
 
