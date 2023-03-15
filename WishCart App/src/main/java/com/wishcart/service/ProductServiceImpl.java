@@ -41,8 +41,8 @@ public class ProductServiceImpl implements ProductService {
 
 		adao.findByEmail(cus.getEmail()).orElseThrow(() -> new AdminException("Invalid auth Key : " + authKey));
 
-		Category category = cdao.findById(product.getCategory_cid()).orElseThrow(
-				() -> new CategoryException("Category not found with cat_id : " + product.getCategory_cid()));
+		Category category = cdao.findById(product.getCategory_id()).orElseThrow(
+				() -> new CategoryException("Category not found with cat_id : " + product.getCategory_id()));
 
 		Product prod = new Product();
 
@@ -166,7 +166,7 @@ public class ProductServiceImpl implements ProductService {
 		for (Product p : products) {
 			if (p.getCategory().getId() == cid) {
 				ProductDto prod = new ProductDto();
-				prod.setCategory_cid(cid);
+				prod.setCategory_id(cid);
 				prod.setDescription(p.getDescription());
 				prod.setImage1(p.getImage1());
 				prod.setImage2(p.getImage2());

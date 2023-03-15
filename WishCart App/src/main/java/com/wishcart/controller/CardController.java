@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wishcart.dto.removeCardDto;
+import com.wishcart.dto.CardDto;
 import com.wishcart.model.Card;
 import com.wishcart.service.CardService;
 
@@ -30,7 +30,7 @@ public class CardController {
 	}
 
 	@DeleteMapping("/removecard/{authkey}")
-	public ResponseEntity<String> removeCardHandler(@RequestBody removeCardDto card,
+	public ResponseEntity<String> removeCardHandler(@RequestBody CardDto card,
 			@PathVariable("authkey") String authKey) {
 		return new ResponseEntity<String>(cs.removeCard(card, authKey), HttpStatus.CREATED);
 	}

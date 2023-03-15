@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wishcart.dto.removeCardDto;
+import com.wishcart.dto.CardDto;
 import com.wishcart.exception.CardException;
 import com.wishcart.exception.CustomerException;
 import com.wishcart.model.Card;
@@ -45,7 +45,7 @@ public class CardServiceImpl implements CardService {
 	}
 
 	@Override
-	public String removeCard(removeCardDto card, String authKey) throws CardException {
+	public String removeCard(CardDto card, String authKey) throws CardException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));

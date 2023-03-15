@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class removeCardDto {
+public class CardDto {
 
 	private String cardHolder;
 	private String cardNumber;
