@@ -106,7 +106,16 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 		adm.setEmail(admin.getEmail());
 		adm.setMobile(admin.getMobile());
 		adm.setName(admin.getName());
-		adm.setPassword(admin.getPassword());
+
+		String encryptedPassword = admin.getPassword();
+
+		try {
+			encryptedPassword = MySecurityConfig.passwordEncoder(encryptedPassword);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		adm.setPassword(encryptedPassword);
 
 		adao.save(adm);
 
@@ -131,12 +140,16 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 		Optional<Admin> opt = adao.findByEmail(user.getEmail());
 
 		if (opt.isEmpty())
-			throw new AdminException("Admin does not exist with email : " + user.getEmail());
+			throw new AdminException("wrong email or password");
 
 		Admin admin = opt.get();
 
-		if (!admin.getPassword().equals(user.getPassword()))
-			throw new AdminException("Wrong password!");
+		try {
+			if (!admin.getPassword().equals(MySecurityConfig.passwordEncoder(admin.getPassword())))
+				throw new AdminException("Wrong email or password");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 
 		Optional<CurrentUserSession> opt1 = cusdao.findByEmail(user.getEmail());
 
@@ -163,9 +176,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 	public SessionDto loginCustomer(UserDto user) throws CustomerException {
 
 		Customer customer = cdao.findByEmail(user.getEmail())
-				.orElseThrow(() -> new CustomerException("Email not found : " + user.getEmail()));
-
-		System.out.println(customer);
+				.orElseThrow(() -> new CustomerException("Wrong email or password"));
 
 		try {
 			if (!customer.getPassword().equals(MySecurityConfig.passwordEncoder(user.getPassword())))
