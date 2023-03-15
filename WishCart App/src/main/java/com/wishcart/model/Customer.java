@@ -1,9 +1,14 @@
 package com.wishcart.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -41,5 +46,8 @@ public class Customer {
 
 	@Pattern(regexp = "^(^[a-zA-Z0-9]{4,50}$)", message = "password must contain atleast 1 uppercase, 1 lowercase, and 1 digit ")
 	private String password;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "customer")
+	private List<Card> cardDetails;
 
 }
