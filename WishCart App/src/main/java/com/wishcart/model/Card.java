@@ -37,7 +37,7 @@ public class Card {
 
 	@Column(unique = true)
 	@Size(min = 3, max = 3)
-	private Integer cvv;
+	private String cvv;
 
 	@JsonIgnore
 	@ManyToOne

@@ -1,5 +1,6 @@
 package com.wishcart.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +59,7 @@ public class CartServiceImpl implements CartService {
 
 		Cart cart = new Cart();
 
-		cart.setCreatedDate(new Date());
+		cart.setCreatedDate(LocalDateTime.now());
 		cart.setCustomer(customer);
 		cart.setProduct(product);
 		cart.setQuantity(1);
@@ -151,6 +152,25 @@ public class CartServiceImpl implements CartService {
 		cd.setTotalPrice(totalPrice);
 
 		return cd;
+
+	}
+
+	@Override
+	public String removeAllCart(String authKey) throws CartException {
+
+		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
+				.orElseThrow(() -> new CustomerException("User not logged in"));
+
+		Customer customer = cdao.findByEmail(cus.getEmail())
+				.orElseThrow(() -> new CustomerException("Invalid authKey"));
+
+		List<Cart> cartItems = cartdao.findAllByCustomerOrderByCreatedDateDesc(customer);
+
+		for (Cart c : cartItems) {
+			cartdao.delete(c);
+		}
+
+		return "cart emptied successfully";
 
 	}
 

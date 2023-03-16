@@ -15,4 +15,6 @@ public interface CartService {
 
 	public CartDto getCartItems(String authKey) throws CartException;
 
+	public String removeAllCart(String authKey) throws CartException;
+
 }

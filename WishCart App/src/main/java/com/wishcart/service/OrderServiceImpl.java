@@ -18,6 +18,7 @@ import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Customer;
 import com.wishcart.model.Order;
 import com.wishcart.model.Product;
+import com.wishcart.model.SoldProduct;
 import com.wishcart.repository.CardDao;
 import com.wishcart.repository.CartDao;
 import com.wishcart.repository.CurrentUserSessionDao;
@@ -41,6 +42,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private ProductDao productdao;
+
+	@Autowired
+	private SoldProductService soldproductservice;
 
 	@Override
 	public Order placeOrder(CardDto carddto, String authKey) throws OrderException {
@@ -67,6 +71,15 @@ public class OrderServiceImpl implements OrderService {
 		for (Cart c : carts) {
 
 			totalPrice += c.getQuantity() * c.getProduct().getPrice();
+
+			SoldProduct soldProduct = new SoldProduct();
+
+			soldProduct.setCustomer(c.getCustomer());
+			soldProduct.setProduct(c.getProduct());
+			soldProduct.setPurchaseDate(new Date());
+			soldProduct.setQuantity(c.getQuantity());
+
+			soldproductservice.addToSoldProduct(soldProduct, authKey);
 
 		}
 
@@ -96,6 +109,15 @@ public class OrderServiceImpl implements OrderService {
 
 		if (customer.getId() != card.getCustomer().getId())
 			throw new CardException("Invalid card details");
+
+		SoldProduct soldProduct = new SoldProduct();
+
+		soldProduct.setCustomer(customer);
+		soldProduct.setProduct(product);
+		soldProduct.setPurchaseDate(new Date());
+		soldProduct.setQuantity(1);
+
+		soldproductservice.addToSoldProduct(soldProduct, authKey);
 
 		Order order = new Order();
 

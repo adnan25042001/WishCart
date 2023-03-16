@@ -18,13 +18,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CurrentUserSession {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer sessionId;
 	private String authKey;
 	private String email;
-	
+
 	@Enumerated(EnumType.STRING)
 	private UserType userType;
 	private LocalDateTime sessionTime;

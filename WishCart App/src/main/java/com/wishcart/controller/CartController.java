@@ -41,7 +41,12 @@ public class CartController {
 
 	@GetMapping("/cart/getall/{authkey}")
 	public ResponseEntity<CartDto> getCartItemsHandler(@PathVariable("authkey") String authKey) {
-		return new ResponseEntity<CartDto>(cs.getCartItems(authKey), HttpStatus.CREATED);
+		return new ResponseEntity<CartDto>(cs.getCartItems(authKey), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/cart/removeall/{authkey}")
+	public ResponseEntity<String> removeAllCartItemsHandler(@PathVariable("authkey") String authKey) {
+		return new ResponseEntity<String>(cs.removeAllCart(authKey), HttpStatus.OK);
 	}
 
 }

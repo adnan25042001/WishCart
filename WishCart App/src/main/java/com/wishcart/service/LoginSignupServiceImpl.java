@@ -137,15 +137,11 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 	@Override
 	public SessionDto loginAdmin(UserDto user) throws AdminException {
 
-		Optional<Admin> opt = adao.findByEmail(user.getEmail());
-
-		if (opt.isEmpty())
-			throw new AdminException("wrong email or password");
-
-		Admin admin = opt.get();
+		Admin admin = adao.findByEmail(user.getEmail())
+				.orElseThrow(() -> new AdminException("wrong email or password"));
 
 		try {
-			if (!admin.getPassword().equals(MySecurityConfig.passwordEncoder(admin.getPassword())))
+			if (!admin.getPassword().equals(MySecurityConfig.passwordEncoder(user.getPassword())))
 				throw new AdminException("Wrong email or password");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
@@ -180,7 +176,7 @@ public class LoginSignupServiceImpl implements LoginSignupService {
 
 		try {
 			if (!customer.getPassword().equals(MySecurityConfig.passwordEncoder(user.getPassword())))
-				throw new CustomerException("Wrong password!");
+				throw new CustomerException("Wrong email or password");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}

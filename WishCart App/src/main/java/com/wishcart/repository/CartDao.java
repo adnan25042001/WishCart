@@ -14,4 +14,6 @@ public interface CartDao extends JpaRepository<Cart, Integer> {
 
 	public List<Cart> findAllByCustomerOrderByCreatedDateDesc(Customer customer);
 
+	public void deleteBycustomer(Customer customer);
+
 }
