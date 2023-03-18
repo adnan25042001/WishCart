@@ -2,7 +2,6 @@ package com.wishcart.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +62,7 @@ public class CartServiceImpl implements CartService {
 		cart.setCustomer(customer);
 		cart.setProduct(product);
 		cart.setQuantity(1);
+		cart.setAdmin(product.getAdmin());
 
 		cartdao.save(cart);
 

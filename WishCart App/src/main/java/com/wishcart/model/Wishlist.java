@@ -3,7 +3,6 @@ package com.wishcart.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +24,7 @@ public class Wishlist {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	@OneToOne(targetEntity = Customer.class, fetch = FetchType.EAGER)
+	@OneToOne(targetEntity = Customer.class)
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 

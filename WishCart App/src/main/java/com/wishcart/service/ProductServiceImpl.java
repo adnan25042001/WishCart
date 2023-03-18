@@ -91,7 +91,23 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getProductByName(String name) throws ProductException {
-		List<Product> products = pdao.findByProductName(name);
+
+		String[] nameArr = name.split(" ");
+
+		List<Product> allProducts = pdao.findAll();
+
+		List<Product> products = new ArrayList<>();
+
+		for (Product p : allProducts) {
+			String pName = p.getProductName();
+			for (String s : nameArr) {
+				if (pName.contains(s)) {
+					products.add(p);
+					break;
+				}
+			}
+		}
+
 		if (products.isEmpty())
 			throw new ProductException("Product not found by name : " + name);
 		return products;

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wishcart.exception.AdminException;
 import com.wishcart.exception.CustomerException;
 import com.wishcart.exception.SoldProductException;
 import com.wishcart.model.Admin;
@@ -57,10 +58,9 @@ public class SoldProductServiceImpl implements SoldProductService {
 		List<SoldProduct> purchasedProducts = soldproductdao.findAllByCustomerOrderByPurchaseDateDesc(customer);
 
 		if (purchasedProducts.size() == 0)
-			throw new SoldProductException("You have not purchased anything yet");
+			throw new SoldProductException("You have not purchased any product yet");
 
 		return purchasedProducts;
-
 	}
 
 	@Override
@@ -69,15 +69,14 @@ public class SoldProductServiceImpl implements SoldProductService {
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
 
-		Admin admin = admindao.findByEmail(cus.getEmail()).orElseThrow(() -> new CustomerException("Invalid authKey"));
+		Admin admin = admindao.findByEmail(cus.getEmail()).orElseThrow(() -> new AdminException("Invalid authKey"));
 
-		List<SoldProduct> purchasedProducts = soldproductdao.findAllByProduct_AdminOrderByPurchaseDateDesc(admin);
+		List<SoldProduct> soldProducts = soldproductdao.findAllByAdminOrderByPurchaseDateDesc(admin);
 
-		if (purchasedProducts.size() == 0)
-			throw new SoldProductException("You have not sold anything yet");
+		if (soldProducts.size() == 0)
+			throw new SoldProductException("You have not sold any product yet");
 
-		return purchasedProducts;
-
+		return soldProducts;
 	}
 
 }

@@ -78,6 +78,7 @@ public class OrderServiceImpl implements OrderService {
 			soldProduct.setProduct(c.getProduct());
 			soldProduct.setPurchaseDate(new Date());
 			soldProduct.setQuantity(c.getQuantity());
+			soldProduct.setAdmin(c.getProduct().getAdmin());
 
 			soldproductservice.addToSoldProduct(soldProduct, authKey);
 
@@ -116,6 +117,7 @@ public class OrderServiceImpl implements OrderService {
 		soldProduct.setProduct(product);
 		soldProduct.setPurchaseDate(new Date());
 		soldProduct.setQuantity(1);
+		soldProduct.setAdmin(product.getAdmin());
 
 		soldproductservice.addToSoldProduct(soldProduct, authKey);
 

@@ -38,4 +38,9 @@ public class Cart {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "admin_id")
+	private Admin admin;
+
 }

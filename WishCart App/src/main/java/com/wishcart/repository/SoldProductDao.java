@@ -14,6 +14,6 @@ public interface SoldProductDao extends JpaRepository<SoldProduct, Integer> {
 
 	public List<SoldProduct> findAllByCustomerOrderByPurchaseDateDesc(Customer customer);
 
-	public List<SoldProduct> findAllByProduct_AdminOrderByPurchaseDateDesc(Admin admin);
+	public List<SoldProduct> findAllByAdminOrderByPurchaseDateDesc(Admin admin);
 
 }
