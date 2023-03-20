@@ -92,25 +92,13 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> getProductByName(String name) throws ProductException {
 
-		String[] nameArr = name.split(" ");
-
-		List<Product> allProducts = pdao.findAll();
-
-		List<Product> products = new ArrayList<>();
-
-		for (Product p : allProducts) {
-			String pName = p.getProductName();
-			for (String s : nameArr) {
-				if (pName.contains(s)) {
-					products.add(p);
-					break;
-				}
-			}
-		}
+		List<Product> products = pdao.searchProduct(name);
 
 		if (products.isEmpty())
 			throw new ProductException("Product not found by name : " + name);
+
 		return products;
+
 	}
 
 	@Override
@@ -125,10 +113,14 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getAllProducts() throws ProductException {
+
 		List<Product> products = pdao.findAll();
+
 		if (products.isEmpty())
 			throw new ProductException("Product not found by");
+
 		return products;
+
 	}
 
 	@Override
