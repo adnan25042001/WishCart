@@ -27,12 +27,12 @@ public class ProductController {
 	@Autowired
 	private ProductService ps;
 
-	@GetMapping("productbyname/{name}")
+	@GetMapping("/productbyname/{name}")
 	public ResponseEntity<List<Product>> getProductByNameHandler(@PathVariable("name") String name) {
 		return new ResponseEntity<List<Product>>(ps.getProductByName(name), HttpStatus.OK);
 	}
 
-	@GetMapping("productbetweenprice/{minprice}/{maxprice}")
+	@GetMapping("/productbetweenprice/{minprice}/{maxprice}")
 	public ResponseEntity<List<Product>> getProductByNameHandler(@PathVariable("minprice") Double minPrice,
 			@PathVariable("maxprice") Double maxPrice) {
 		return new ResponseEntity<List<Product>>(ps.getProductBetweenPrice(minPrice, maxPrice), HttpStatus.OK);
@@ -55,19 +55,19 @@ public class ProductController {
 		return new ResponseEntity<Product>(ps.removeProduct(id, authKey), HttpStatus.OK);
 	}
 
-	@GetMapping("productbyid/{authkey}/{id}")
+	@GetMapping("/productbyid/{authkey}/{id}")
 	public ResponseEntity<Product> getProductByIdHandler(@PathVariable("id") Integer id,
 			@PathVariable("authkey") String authKey) {
 		return new ResponseEntity<Product>(ps.getProductById(id, authKey), HttpStatus.OK);
 	}
 
-	@PostMapping("updateproduct/{authkey}")
+	@PostMapping("/updateproduct/{authkey}")
 	public ResponseEntity<Product> updateProductHandler(@RequestBody @Valid ProductDto product,
 			@PathVariable("authKey") String authKey) {
 		return new ResponseEntity<Product>(ps.updateProduct(product, authKey), HttpStatus.CREATED);
 	}
 
-	@PutMapping("updateproductprice/{authkey}/{id}/{price}")
+	@PutMapping("/updateproductprice/{authkey}/{id}/{price}")
 	public ResponseEntity<Product> updateProductPriceHandler(@PathVariable("id") Integer id,
 			@PathVariable("price") Double price, @PathVariable("authKey") String authKey) {
 		return new ResponseEntity<Product>(ps.updateProductPrice(id, price, authKey), HttpStatus.CREATED);
