@@ -16,7 +16,7 @@ import com.wishcart.model.Wishlist;
 import com.wishcart.service.WishlistService;
 
 @RestController
-@RequestMapping("/wishcart/wishlist")
+@RequestMapping("wishlist")
 public class WishlistController {
 
 	@Autowired

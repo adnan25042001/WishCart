@@ -117,7 +117,7 @@ public class ProductServiceImpl implements ProductService {
 		List<Product> products = pdao.findAll();
 
 		if (products.isEmpty())
-			throw new ProductException("Product not found by");
+			throw new ProductException("Product not found");
 
 		return products;
 

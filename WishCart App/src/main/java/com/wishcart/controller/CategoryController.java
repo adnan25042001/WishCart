@@ -19,7 +19,7 @@ import com.wishcart.model.Category;
 import com.wishcart.service.CategoryService;
 
 @RestController
-@RequestMapping("/wishcart/category")
+@RequestMapping("/category")
 public class CategoryController {
 
 	@Autowired

@@ -15,7 +15,6 @@ import com.wishcart.dto.CartDto;
 import com.wishcart.service.CartService;
 
 @RestController
-@RequestMapping("/wishcart")
 public class CartController {
 
 	@Autowired

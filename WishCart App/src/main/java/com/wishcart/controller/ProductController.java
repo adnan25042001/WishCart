@@ -21,7 +21,6 @@ import com.wishcart.model.Product;
 import com.wishcart.service.ProductService;
 
 @RestController
-@RequestMapping("/wishcart")
 public class ProductController {
 
 	@Autowired

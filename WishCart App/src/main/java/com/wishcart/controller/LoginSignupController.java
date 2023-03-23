@@ -19,7 +19,6 @@ import com.wishcart.dto.UserDto;
 import com.wishcart.service.LoginSignupService;
 
 @RestController
-@RequestMapping("/wishcart")
 public class LoginSignupController {
 
 	@Autowired

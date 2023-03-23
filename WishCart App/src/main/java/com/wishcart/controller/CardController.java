@@ -18,7 +18,6 @@ import com.wishcart.model.Card;
 import com.wishcart.service.CardService;
 
 @RestController
-@RequestMapping("/wishcart")
 public class CardController {
 
 	@Autowired
