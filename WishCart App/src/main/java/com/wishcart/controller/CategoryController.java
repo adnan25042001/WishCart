@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ public class CategoryController {
 	@Autowired
 	private CategoryService cs;
 
+	@CrossOrigin(origins = "http://127.0.0.1:5500")
 	@PostMapping("/add")
 	public ResponseEntity<Category> addCategoryHandler(@RequestBody @Valid Category category) {
 		return new ResponseEntity<Category>(cs.addCategory(category), HttpStatus.OK);
@@ -40,6 +42,7 @@ public class CategoryController {
 		return new ResponseEntity<Category>(cs.updateCategory(category), HttpStatus.CREATED);
 	}
 
+	@CrossOrigin(origins = "http://127.0.0.1:5500")
 	@GetMapping("/all")
 	public ResponseEntity<List<Category>> getAllCategoryHandler() {
 		return new ResponseEntity<List<Category>>(cs.getAllCategory(), HttpStatus.OK);
