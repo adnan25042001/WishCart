@@ -11,7 +11,7 @@ public interface LoginSignupService {
 
 	public SessionDto customerSignup(CustomerSignupDto customer) throws CustomerException;
 
-	 public SessionDto adminSignup(AdminSignupDto admin) throws AdminException;
+	public SessionDto adminSignup(AdminSignupDto admin) throws AdminException;
 
 	public SessionDto loginAdmin(UserDto user) throws AdminException;
 

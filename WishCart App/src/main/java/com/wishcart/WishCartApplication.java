@@ -2,6 +2,7 @@ package com.wishcart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -12,7 +13,8 @@ public class WishCartApplication {
 		SpringApplication.run(WishCartApplication.class, args);
 	}
 
-	public WebMvcConfigurer configure() {
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
