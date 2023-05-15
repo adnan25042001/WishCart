@@ -1,18 +1,17 @@
 package com.wishcart.service;
 
-import java.util.List;
-
 import com.wishcart.exception.CategoryException;
 import com.wishcart.model.Category;
+import com.wishcart.model.SuccessMessage;
 
 public interface CategoryService {
 
-	public Category addCategory(Category category);
+	public SuccessMessage addCategory(Category category);
 
-	public Category removeCategory(Integer id) throws CategoryException;
+	public SuccessMessage removeCategory(Integer id) throws CategoryException;
 
-	public Category updateCategory(Category category) throws CategoryException;
+	public SuccessMessage updateCategory(Category category) throws CategoryException;
 
-	public List<Category> getAllCategory() throws CategoryException;
+	public SuccessMessage getAllCategory() throws CategoryException;
 
 }

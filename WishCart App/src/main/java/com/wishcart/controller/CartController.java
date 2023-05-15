@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wishcart.dto.CartDto;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.service.CartService;
 
 @RestController
@@ -20,31 +20,32 @@ public class CartController {
 	private CartService cs;
 
 	@PostMapping("/cart/add/{productid}/{authkey}")
-	public ResponseEntity<String> addToCartHandler(@PathVariable("productid") Integer productId,
+	public ResponseEntity<SuccessMessage> addToCartHandler(@PathVariable("productid") Integer productId,
 			@PathVariable("authkey") String authKey) {
-		return new ResponseEntity<String>(cs.addToCart(productId, authKey), HttpStatus.CREATED);
+		return new ResponseEntity<SuccessMessage>(cs.addToCart(productId, authKey), HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/cart/remove/{productid}/{authkey}")
-	public ResponseEntity<String> removeFromCartHandler(@PathVariable("productid") Integer productId,
+	public ResponseEntity<SuccessMessage> removeFromCartHandler(@PathVariable("productid") Integer productId,
 			@PathVariable("authkey") String authKey) {
-		return new ResponseEntity<String>(cs.removeFromCart(productId, authKey), HttpStatus.OK);
+		return new ResponseEntity<SuccessMessage>(cs.removeFromCart(productId, authKey), HttpStatus.OK);
 	}
 
 	@PutMapping("/cart/updatequantity/{productid}/{quantity}/{authkey}")
-	public ResponseEntity<String> updateProductQuantityHandler(@PathVariable("productid") Integer productId,
+	public ResponseEntity<SuccessMessage> updateProductQuantityHandler(@PathVariable("productid") Integer productId,
 			@PathVariable("quantity") Integer quantity, @PathVariable("authkey") String authKey) {
-		return new ResponseEntity<String>(cs.updateProductQuantity(productId, quantity, authKey), HttpStatus.OK);
+		return new ResponseEntity<SuccessMessage>(cs.updateProductQuantity(productId, quantity, authKey),
+				HttpStatus.OK);
 	}
 
 	@GetMapping("/cart/getall/{authkey}")
-	public ResponseEntity<CartDto> getCartItemsHandler(@PathVariable("authkey") String authKey) {
-		return new ResponseEntity<CartDto>(cs.getCartItems(authKey), HttpStatus.OK);
+	public ResponseEntity<SuccessMessage> getCartItemsHandler(@PathVariable("authkey") String authKey) {
+		return new ResponseEntity<SuccessMessage>(cs.getCartItems(authKey), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/cart/removeall/{authkey}")
-	public ResponseEntity<String> removeAllCartItemsHandler(@PathVariable("authkey") String authKey) {
-		return new ResponseEntity<String>(cs.removeAllCart(authKey), HttpStatus.OK);
+	public ResponseEntity<SuccessMessage> removeAllCartItemsHandler(@PathVariable("authkey") String authKey) {
+		return new ResponseEntity<SuccessMessage>(cs.removeAllCart(authKey), HttpStatus.OK);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.wishcart.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.wishcart.exception.CustomerException;
 import com.wishcart.model.Card;
 import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Customer;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.repository.CardDao;
 import com.wishcart.repository.CurrentUserSessionDao;
 import com.wishcart.repository.CustomerDao;
@@ -28,7 +30,7 @@ public class CardServiceImpl implements CardService {
 	private CustomerDao customerdao;
 
 	@Override
-	public String addCard(Card card, String authKey) throws CardException {
+	public SuccessMessage addCard(Card card, String authKey) throws CardException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -40,12 +42,17 @@ public class CardServiceImpl implements CardService {
 
 		carddao.save(card);
 
-		return "card saved successfully";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> message = new ArrayList<>();
+		message.add("card saved successfully");
+		successMessage.setResult(message);
 
+		return successMessage;
 	}
 
 	@Override
-	public String removeCard(CardDto card, String authKey) throws CardException {
+	public SuccessMessage removeCard(CardDto card, String authKey) throws CardException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -61,12 +68,18 @@ public class CardServiceImpl implements CardService {
 
 		carddao.delete(crd);
 
-		return "card removed successfully";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> message = new ArrayList<>();
+		message.add("card removed successfully");
+		successMessage.setResult(message);
+
+		return successMessage;
 
 	}
 
 	@Override
-	public List<Card> getAllCardsOfUser(String authKey) throws CardException {
+	public SuccessMessage getAllCardsOfUser(String authKey) throws CardException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -79,7 +92,12 @@ public class CardServiceImpl implements CardService {
 		if (cards.size() == 0)
 			throw new CardException("No card available");
 
-		return cards;
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(cards.size());
+		successMessage.setResult(cards);
+
+		return successMessage;
+
 	}
 
 }

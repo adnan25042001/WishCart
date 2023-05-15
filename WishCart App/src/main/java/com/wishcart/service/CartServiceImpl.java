@@ -18,6 +18,7 @@ import com.wishcart.model.Cart;
 import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Customer;
 import com.wishcart.model.Product;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.repository.CartDao;
 import com.wishcart.repository.CurrentUserSessionDao;
 import com.wishcart.repository.CustomerDao;
@@ -39,7 +40,7 @@ public class CartServiceImpl implements CartService {
 	private CurrentUserSessionDao cusdao;
 
 	@Override
-	public String addToCart(Integer productId, String authKey) throws ProductException {
+	public SuccessMessage addToCart(Integer productId, String authKey) throws ProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -66,12 +67,18 @@ public class CartServiceImpl implements CartService {
 
 		cartdao.save(cart);
 
-		return "product added to cart";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> msg = new ArrayList<>();
+		msg.add("product added to cart");
+		successMessage.setResult(msg);
+
+		return successMessage;
 
 	}
 
 	@Override
-	public String updateProductQuantity(Integer productId, Integer quantity, String authKey)
+	public SuccessMessage updateProductQuantity(Integer productId, Integer quantity, String authKey)
 			throws ProductException, CartException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
@@ -92,12 +99,18 @@ public class CartServiceImpl implements CartService {
 			cartdao.save(cart);
 		}
 
-		return "quantity updated";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> msg = new ArrayList<>();
+		msg.add("quantity updated");
+		successMessage.setResult(msg);
+
+		return successMessage;
 
 	}
 
 	@Override
-	public String removeFromCart(Integer productId, String authKey) throws ProductException, CartException {
+	public SuccessMessage removeFromCart(Integer productId, String authKey) throws ProductException, CartException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -112,12 +125,18 @@ public class CartServiceImpl implements CartService {
 
 		cartdao.delete(cart);
 
-		return "Product removed from cart";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> msg = new ArrayList<>();
+		msg.add("Product removed from cart");
+		successMessage.setResult(msg);
+
+		return successMessage;
 
 	}
 
 	@Override
-	public CartDto getCartItems(String authKey) throws CartException {
+	public SuccessMessage getCartItems(String authKey) throws CartException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -150,13 +169,20 @@ public class CartServiceImpl implements CartService {
 
 		cd.setCartItems(cartItemDtos);
 		cd.setTotalPrice(totalPrice);
+		cd.setTotalItems(cartItemDtos.size());
+		
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<CartDto> msg = new ArrayList<>();
+		msg.add(cd);
+		successMessage.setResult(msg);
 
-		return cd;
+		return successMessage;
 
 	}
 
 	@Override
-	public String removeAllCart(String authKey) throws CartException {
+	public SuccessMessage removeAllCart(String authKey) throws CartException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -170,7 +196,13 @@ public class CartServiceImpl implements CartService {
 			cartdao.delete(c);
 		}
 
-		return "cart emptied successfully";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> msg = new ArrayList<>();
+		msg.add("cart emptied successfully");
+		successMessage.setResult(msg);
+
+		return successMessage;
 
 	}
 

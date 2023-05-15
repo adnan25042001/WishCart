@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wishcart.dto.CardDto;
-import com.wishcart.model.Order;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.service.OrderService;
 
 @RestController
@@ -19,15 +19,15 @@ public class OrderController {
 	private OrderService orderservice;
 
 	@PostMapping("/placeorder/{authkey}")
-	public ResponseEntity<Order> placeOrderHandler(@RequestBody CardDto carddto,
+	public ResponseEntity<SuccessMessage> placeOrderHandler(@RequestBody CardDto carddto,
 			@PathVariable("authkey") String authkey) {
-		return new ResponseEntity<Order>(orderservice.placeOrder(carddto, authkey), HttpStatus.OK);
+		return new ResponseEntity<SuccessMessage>(orderservice.placeOrder(carddto, authkey), HttpStatus.OK);
 	}
 
 	@PostMapping("/placeorderbyproductid/{productid}/{authkey}")
-	public ResponseEntity<Order> placeOrderByProductIdHandler(@RequestBody CardDto carddto,
+	public ResponseEntity<SuccessMessage> placeOrderByProductIdHandler(@RequestBody CardDto carddto,
 			@PathVariable("productid") Integer productid, @PathVariable("authkey") String authkey) {
-		return new ResponseEntity<Order>(orderservice.placeOrderByProductId(carddto, productid, authkey),
+		return new ResponseEntity<SuccessMessage>(orderservice.placeOrderByProductId(carddto, productid, authkey),
 				HttpStatus.OK);
 	}
 

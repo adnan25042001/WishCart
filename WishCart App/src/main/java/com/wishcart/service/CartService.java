@@ -1,20 +1,20 @@
 package com.wishcart.service;
 
-import com.wishcart.dto.CartDto;
 import com.wishcart.exception.CartException;
 import com.wishcart.exception.ProductException;
+import com.wishcart.model.SuccessMessage;
 
 public interface CartService {
 
-	public String addToCart(Integer productId, String authKey) throws ProductException;
+	public SuccessMessage addToCart(Integer productId, String authKey) throws ProductException;
 
-	public String updateProductQuantity(Integer productId, Integer quantity, String authKey)
+	public SuccessMessage updateProductQuantity(Integer productId, Integer quantity, String authKey)
 			throws ProductException, CartException;
 
-	public String removeFromCart(Integer productId, String authKey) throws ProductException, CartException;
+	public SuccessMessage removeFromCart(Integer productId, String authKey) throws ProductException, CartException;
 
-	public CartDto getCartItems(String authKey) throws CartException;
+	public SuccessMessage getCartItems(String authKey) throws CartException;
 
-	public String removeAllCart(String authKey) throws CartException;
+	public SuccessMessage removeAllCart(String authKey) throws CartException;
 
 }

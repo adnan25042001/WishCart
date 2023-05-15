@@ -1,5 +1,6 @@
 package com.wishcart.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.wishcart.model.Admin;
 import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Customer;
 import com.wishcart.model.SoldProduct;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.repository.AdminDao;
 import com.wishcart.repository.CurrentUserSessionDao;
 import com.wishcart.repository.CustomerDao;
@@ -33,7 +35,7 @@ public class SoldProductServiceImpl implements SoldProductService {
 	private AdminDao admindao;
 
 	@Override
-	public String addToSoldProduct(SoldProduct soldProduct, String authKey) throws SoldProductException {
+	public SuccessMessage addToSoldProduct(SoldProduct soldProduct, String authKey) throws SoldProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -42,12 +44,18 @@ public class SoldProductServiceImpl implements SoldProductService {
 
 		soldproductdao.save(soldProduct);
 
-		return "updated";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> list = new ArrayList<>();
+		list.add("updated");
+		successMessage.setResult(list);
+
+		return successMessage;
 
 	}
 
 	@Override
-	public List<SoldProduct> getAllPurchasedProductByCustomer(String authKey) throws SoldProductException {
+	public SuccessMessage getAllPurchasedProductByCustomer(String authKey) throws SoldProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -60,11 +68,13 @@ public class SoldProductServiceImpl implements SoldProductService {
 		if (purchasedProducts.size() == 0)
 			throw new SoldProductException("You have not purchased any product yet");
 
-		return purchasedProducts;
+		SuccessMessage successMessage = new SuccessMessage(true, purchasedProducts.size(), purchasedProducts);
+
+		return successMessage;
 	}
 
 	@Override
-	public List<SoldProduct> getAllSoldProductByAdmin(String authKey) throws SoldProductException {
+	public SuccessMessage getAllSoldProductByAdmin(String authKey) throws SoldProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -76,7 +86,9 @@ public class SoldProductServiceImpl implements SoldProductService {
 		if (soldProducts.size() == 0)
 			throw new SoldProductException("You have not sold any product yet");
 
-		return soldProducts;
+		SuccessMessage successMessage = new SuccessMessage(true, soldProducts.size(), soldProducts);
+
+		return successMessage;
 	}
 
 }

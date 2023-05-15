@@ -1,4 +1,4 @@
-package com.wishcart.dto;
+package com.wishcart.model;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDto {
+public class SuccessMessage {
 
-	private List<CartItemDto> cartItems;
-	private Double totalPrice;
-	private Integer totalItems;
-
+	private boolean success = true;
+	private Integer totalResult;
+	private List<?> result;
+	
 }

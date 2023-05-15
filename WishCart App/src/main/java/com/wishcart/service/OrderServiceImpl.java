@@ -1,5 +1,6 @@
 package com.wishcart.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.wishcart.model.Customer;
 import com.wishcart.model.Order;
 import com.wishcart.model.Product;
 import com.wishcart.model.SoldProduct;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.repository.CardDao;
 import com.wishcart.repository.CartDao;
 import com.wishcart.repository.CurrentUserSessionDao;
@@ -47,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
 	private SoldProductService soldproductservice;
 
 	@Override
-	public Order placeOrder(CardDto carddto, String authKey) throws OrderException {
+	public SuccessMessage placeOrder(CardDto carddto, String authKey) throws OrderException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -90,11 +92,18 @@ public class OrderServiceImpl implements OrderService {
 		order.setStatus("Delivered");
 		order.setTotalPrice(totalPrice);
 
-		return order;
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<Order> list = new ArrayList<>();
+		list.add(order);
+		successMessage.setResult(list);
+
+		return successMessage;
+
 	}
 
 	@Override
-	public Order placeOrderByProductId(CardDto carddto, Integer id, String authKey) throws OrderException {
+	public SuccessMessage placeOrderByProductId(CardDto carddto, Integer id, String authKey) throws OrderException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -127,7 +136,13 @@ public class OrderServiceImpl implements OrderService {
 		order.setStatus("Delivered");
 		order.setTotalPrice(product.getPrice());
 
-		return order;
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<Order> list = new ArrayList<>();
+		list.add(order);
+		successMessage.setResult(list);
+
+		return successMessage;
 
 	}
 

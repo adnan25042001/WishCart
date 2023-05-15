@@ -1,7 +1,5 @@
 package com.wishcart.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wishcart.dto.CardDto;
 import com.wishcart.model.Card;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.service.CardService;
 
 @RestController
@@ -23,19 +22,20 @@ public class CardController {
 	private CardService cs;
 
 	@PostMapping("/addcard/{authkey}")
-	public ResponseEntity<String> addCardHandler(@RequestBody Card card, @PathVariable("authkey") String authKey) {
-		return new ResponseEntity<String>(cs.addCard(card, authKey), HttpStatus.CREATED);
+	public ResponseEntity<SuccessMessage> addCardHandler(@RequestBody Card card,
+			@PathVariable("authkey") String authKey) {
+		return new ResponseEntity<SuccessMessage>(cs.addCard(card, authKey), HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/removecard/{authkey}")
-	public ResponseEntity<String> removeCardHandler(@RequestBody CardDto card,
+	public ResponseEntity<SuccessMessage> removeCardHandler(@RequestBody CardDto card,
 			@PathVariable("authkey") String authKey) {
-		return new ResponseEntity<String>(cs.removeCard(card, authKey), HttpStatus.CREATED);
+		return new ResponseEntity<SuccessMessage>(cs.removeCard(card, authKey), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/getallcards/{authkey}")
-	public ResponseEntity<List<Card>> getAllCardHandler(@PathVariable("authkey") String authKey) {
-		return new ResponseEntity<List<Card>>(cs.getAllCardsOfUser(authKey), HttpStatus.CREATED);
+	public ResponseEntity<SuccessMessage> getAllCardHandler(@PathVariable("authkey") String authKey) {
+		return new ResponseEntity<SuccessMessage>(cs.getAllCardsOfUser(authKey), HttpStatus.CREATED);
 	}
 
 }

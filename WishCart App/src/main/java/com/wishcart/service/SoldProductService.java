@@ -1,16 +1,15 @@
 package com.wishcart.service;
 
-import java.util.List;
-
 import com.wishcart.exception.SoldProductException;
 import com.wishcart.model.SoldProduct;
+import com.wishcart.model.SuccessMessage;
 
 public interface SoldProductService {
 
-	public String addToSoldProduct(SoldProduct soldProduct, String authKey) throws SoldProductException;
+	public SuccessMessage addToSoldProduct(SoldProduct soldProduct, String authKey) throws SoldProductException;
 
-	public List<SoldProduct> getAllPurchasedProductByCustomer(String authKey) throws SoldProductException;
+	public SuccessMessage getAllPurchasedProductByCustomer(String authKey) throws SoldProductException;
 
-	public List<SoldProduct> getAllSoldProductByAdmin(String authKey) throws SoldProductException;
+	public SuccessMessage getAllSoldProductByAdmin(String authKey) throws SoldProductException;
 
 }

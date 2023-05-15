@@ -1,7 +1,5 @@
 package com.wishcart.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wishcart.model.Category;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.service.CategoryService;
 
 @RestController
@@ -26,23 +25,23 @@ public class CategoryController {
 	private CategoryService cs;
 
 	@PostMapping("/add")
-	public ResponseEntity<Category> addCategoryHandler(@RequestBody @Valid Category category) {
-		return new ResponseEntity<Category>(cs.addCategory(category), HttpStatus.OK);
+	public ResponseEntity<SuccessMessage> addCategoryHandler(@RequestBody @Valid Category category) {
+		return new ResponseEntity<SuccessMessage>(cs.addCategory(category), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/remove?cat_id")
-	public ResponseEntity<Category> removeategoryHandler(@RequestParam("cat_id") Integer id) {
-		return new ResponseEntity<Category>(cs.removeCategory(id), HttpStatus.OK);
+	public ResponseEntity<SuccessMessage> removeategoryHandler(@RequestParam("cat_id") Integer id) {
+		return new ResponseEntity<SuccessMessage>(cs.removeCategory(id), HttpStatus.OK);
 	}
 
 	@PostMapping("/update")
-	public ResponseEntity<Category> updateCategoryHandler(@RequestBody @Valid Category category) {
-		return new ResponseEntity<Category>(cs.updateCategory(category), HttpStatus.CREATED);
+	public ResponseEntity<SuccessMessage> updateCategoryHandler(@RequestBody @Valid Category category) {
+		return new ResponseEntity<SuccessMessage>(cs.updateCategory(category), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<List<Category>> getAllCategoryHandler() {
-		return new ResponseEntity<List<Category>>(cs.getAllCategory(), HttpStatus.OK);
+	public ResponseEntity<SuccessMessage> getAllCategoryHandler() {
+		return new ResponseEntity<SuccessMessage>(cs.getAllCategory(), HttpStatus.OK);
 	}
 
 }

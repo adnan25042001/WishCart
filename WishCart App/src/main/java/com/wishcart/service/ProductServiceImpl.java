@@ -13,6 +13,7 @@ import com.wishcart.exception.ProductException;
 import com.wishcart.model.Category;
 import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Product;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.repository.AdminDao;
 import com.wishcart.repository.CategoryDao;
 import com.wishcart.repository.CurrentUserSessionDao;
@@ -34,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
 	private CurrentUserSessionDao cusdao;
 
 	@Override
-	public Product addProduct(ProductDto product, String authKey) {
+	public SuccessMessage addProduct(ProductDto product, String authKey) {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
@@ -54,13 +55,19 @@ public class ProductServiceImpl implements ProductService {
 		prod.setPrice(product.getPrice());
 		prod.setProductName(product.getProductName());
 		prod.setQuantity(product.getQuantity());
+		
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<Product> list = new ArrayList<>();
+		list.add(pdao.save(prod));
+		successMessage.setResult(list);
 
-		return pdao.save(prod);
+		return successMessage;
 
 	}
 
 	@Override
-	public Product removeProduct(Integer id, String authKey) throws ProductException {
+	public SuccessMessage removeProduct(Integer id, String authKey) throws ProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
@@ -70,13 +77,19 @@ public class ProductServiceImpl implements ProductService {
 		Product product = pdao.findById(id).orElseThrow(() -> new ProductException("Invalid Product Id : " + id));
 
 		pdao.delete(product);
+		
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<Product> list = new ArrayList<>();
+		list.add(product);
+		successMessage.setResult(list);
 
-		return product;
+		return successMessage;
 
 	}
 
 	@Override
-	public Product getProductById(Integer id, String authKey) throws ProductException {
+	public SuccessMessage getProductById(Integer id, String authKey) throws ProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
@@ -85,46 +98,65 @@ public class ProductServiceImpl implements ProductService {
 
 		Product product = pdao.findById(id).orElseThrow(() -> new ProductException("Invalid Product Id : " + id));
 
-		return product;
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<Product> list = new ArrayList<>();
+		list.add(product);
+		successMessage.setResult(list);
+
+		return successMessage;
 
 	}
 
 	@Override
-	public List<Product> getProductByName(String name) throws ProductException {
+	public SuccessMessage getProductByName(String name) throws ProductException {
 
 		List<Product> products = pdao.searchProduct(name);
 
 		if (products.isEmpty())
 			throw new ProductException("Product not found by name : " + name);
 
-		return products;
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(products.size());
+		successMessage.setResult(products);
+
+		return successMessage;
 
 	}
 
 	@Override
-	public List<Product> getProductBetweenPrice(Double minPrice, Double maxPrice) throws ProductException {
+	public SuccessMessage getProductBetweenPrice(Double minPrice, Double maxPrice) throws ProductException {
 
 		List<Product> products = pdao.findByPriceBetween(minPrice, maxPrice);
 		if (products.isEmpty())
 			throw new ProductException("Product not found between : " + minPrice + " and " + maxPrice);
-		return products;
+		
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(products.size());
+		successMessage.setResult(products);
+
+		return successMessage;
 
 	}
 
 	@Override
-	public List<Product> getAllProducts() throws ProductException {
+	public SuccessMessage getAllProducts() throws ProductException {
 
 		List<Product> products = pdao.findAll();
 
 		if (products.isEmpty())
 			throw new ProductException("Product not found");
+		
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(products.size());
+		successMessage.setResult(products);
 
-		return products;
+		return successMessage;
 
 	}
 
 	@Override
-	public Product updateProduct(ProductDto product, String authKey) throws ProductException {
+	public SuccessMessage updateProduct(ProductDto product, String authKey) throws ProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
@@ -141,13 +173,19 @@ public class ProductServiceImpl implements ProductService {
 		prod.setPrice(product.getPrice());
 		prod.setProductName(product.getProductName());
 		prod.setQuantity(product.getQuantity());
+		
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<Product> list = new ArrayList<>();
+		list.add(pdao.save(prod));
+		successMessage.setResult(list);
 
-		return pdao.save(prod);
+		return successMessage;
 
 	}
 
 	@Override
-	public Product updateProductPrice(Integer id, Double price, String authKey) throws ProductException {
+	public SuccessMessage updateProductPrice(Integer id, Double price, String authKey) throws ProductException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new AdminException("User not logged in"));
@@ -157,13 +195,19 @@ public class ProductServiceImpl implements ProductService {
 		Product prod = pdao.findById(id).orElseThrow(() -> new ProductException("Invalid product Id : " + id));
 
 		prod.setPrice(price);
+		
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<Product> list = new ArrayList<>();
+		list.add(pdao.save(prod));
+		successMessage.setResult(list);
 
-		return pdao.save(prod);
+		return successMessage;
 
 	}
 
 	@Override
-	public List<ProductDto> getProductsByCategoryId(Integer cid) throws ProductException, CategoryException {
+	public SuccessMessage getProductsByCategoryId(Integer cid) throws ProductException, CategoryException {
 
 		cdao.findById(cid).orElseThrow(() -> new CategoryException("Invalid Category Id"));
 
@@ -190,8 +234,12 @@ public class ProductServiceImpl implements ProductService {
 
 		if (productList.size() == 0)
 			throw new ProductException("Product not found");
+		
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setResult(productList);
+		successMessage.setTotalResult(productList.size());
 
-		return productList;
+		return successMessage;
 
 	}
 

@@ -1,5 +1,6 @@
 package com.wishcart.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import com.wishcart.exception.WishlistException;
 import com.wishcart.model.CurrentUserSession;
 import com.wishcart.model.Customer;
 import com.wishcart.model.Product;
+import com.wishcart.model.SuccessMessage;
 import com.wishcart.model.Wishlist;
 import com.wishcart.repository.CurrentUserSessionDao;
 import com.wishcart.repository.CustomerDao;
@@ -34,7 +36,7 @@ public class WishlistServiceImpl implements WishlistService {
 	private CurrentUserSessionDao cusdao;
 
 	@Override
-	public String addToWishlist(Integer productId, String authKey) throws ProductException, WishlistException {
+	public SuccessMessage addToWishlist(Integer productId, String authKey) throws ProductException, WishlistException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -57,12 +59,18 @@ public class WishlistServiceImpl implements WishlistService {
 
 		wdao.save(wishlist);
 
-		return "product added to wishlist";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> list = new ArrayList<>();
+		list.add("product added to wishlist");
+
+		return successMessage;
 
 	}
 
 	@Override
-	public String removeFromWishlist(Integer productId, String authKey) throws ProductException, WishlistException {
+	public SuccessMessage removeFromWishlist(Integer productId, String authKey)
+			throws ProductException, WishlistException {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -77,12 +85,17 @@ public class WishlistServiceImpl implements WishlistService {
 
 		wdao.delete(wl);
 
-		return "Product removed from wishlist";
+		SuccessMessage successMessage = new SuccessMessage();
+		successMessage.setTotalResult(1);
+		List<String> list = new ArrayList<>();
+		list.add("Product removed from wishlist");
+
+		return successMessage;
 
 	}
 
 	@Override
-	public List<Wishlist> getWishlistOfUser(String authKey) {
+	public SuccessMessage getWishlistOfUser(String authKey) {
 
 		CurrentUserSession cus = cusdao.findByAuthKey(authKey)
 				.orElseThrow(() -> new CustomerException("User not logged in"));
@@ -96,7 +109,9 @@ public class WishlistServiceImpl implements WishlistService {
 			throw new WishlistException("Wishlist is empty");
 		}
 
-		return wishlist;
+		SuccessMessage successMessage = new SuccessMessage(true, wishlist.size(), wishlist);
+
+		return successMessage;
 
 	}
 
