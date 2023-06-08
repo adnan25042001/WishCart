@@ -6,12 +6,12 @@ import com.wishcart.model.SuccessMessage;
 
 public interface WishlistService {
 
-	public SuccessMessage addToWishlist(Long productId) throws ProductException, WishlistException;
+	public SuccessMessage addToWishlist(Long productId, String email) throws ProductException, WishlistException;
 
-	public SuccessMessage removeFromWishlist(Long productId) throws ProductException, WishlistException;
+	public SuccessMessage removeFromWishlist(Long wishlistId, String email) throws ProductException, WishlistException;
 
-	public SuccessMessage getWishlistOfUser();
+	public SuccessMessage getWishlistOfUser(String email);
 	
-	public SuccessMessage addToCart(Long productId) throws ProductException;
+	public SuccessMessage addToCart(Long productId, String email) throws ProductException;
 
 }

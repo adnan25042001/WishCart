@@ -35,6 +35,7 @@ public class SecurityConfig {
 	private final LogoutService logoutService;
 
 	// Create security filter bean
+	@SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -55,30 +56,31 @@ public class SecurityConfig {
 					"webjars/**", 
 					"/swagger-ui.html"
 					)
-				.permitAll()
-				.requestMatchers("/api/v1/admin/**")
-				.hasRole(ADMIN.name())
-				.requestMatchers("/api/v1/seller/**")
-				.hasRole(SELLER.name())
-				.requestMatchers("/api/v1/user/**")
-				.hasRole(USER.name())
-				.anyRequest()
-				.authenticated()
-				.and()
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.authenticationProvider(authenticationProvider)
-				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-				.logout()
-				.logoutUrl("/api/v1/auth/logout")
-				.addLogoutHandler(logoutService)
-				.logoutSuccessHandler(
-					(request, response, authentication) -> 
-						SecurityContextHolder.clearContext()
-				);
+			.permitAll()
+			.requestMatchers("/api/v1/admin/**")
+			.hasRole(ADMIN.name())
+			.requestMatchers("/api/v1/seller/**")
+			.hasRole(SELLER.name())
+			.requestMatchers("/api/v1/user/**")
+			.hasRole(USER.name())
+			.anyRequest()
+			.authenticated()
+			.and()
+			.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.authenticationProvider(authenticationProvider)
+			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+			.logout()
+			.logoutUrl("/api/v1/auth/logout")
+			.addLogoutHandler(logoutService)
+			.logoutSuccessHandler(
+				(request, response, authentication) -> 
+					SecurityContextHolder.clearContext()
+			);
 
 		return http.build();
+		
 	}
 
 }
