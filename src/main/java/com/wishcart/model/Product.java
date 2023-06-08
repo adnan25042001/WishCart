@@ -49,13 +49,6 @@ public class Product {
 	@ManyToMany(mappedBy = "products")
 	private List<Category> categories;
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	private List<CartItem> cartItems;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	private List<WishlistItem> wishlistItems;
-
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "seller_id")

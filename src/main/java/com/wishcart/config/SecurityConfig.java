@@ -43,7 +43,7 @@ public class SecurityConfig {
 			.cors(Customizer.withDefaults())
 			.authorizeHttpRequests()
 			.requestMatchers(
-					"/api/v1/auth/**", 
+					"/api/v1/auth/**",
 					"/v2/api-docs", 
 					"/v3/api-docs", 
 					"/v3/api-docs/**",
@@ -53,7 +53,8 @@ public class SecurityConfig {
 					"configuration/security",
 					"swagger-ui/**", 
 					"webjars/**", 
-					"/swagger-ui.html")
+					"/swagger-ui.html"
+					)
 				.permitAll()
 				.requestMatchers("/api/v1/admin/**")
 				.hasRole(ADMIN.name())

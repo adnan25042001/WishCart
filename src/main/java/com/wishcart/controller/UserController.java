@@ -1,5 +1,7 @@
 package com.wishcart.controller;
 
+import java.security.Principal;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	@GetMapping("/get")
-	public ResponseEntity<String> getHello() {
-		return new ResponseEntity<String>("Hello from user", HttpStatus.OK);
+	public ResponseEntity<String> getHello(Principal principal) {
+		String user = principal.getName();
+		System.out.println(user);
+		return new ResponseEntity<String>(user + "Hello", HttpStatus.OK);
 	}
 
 }

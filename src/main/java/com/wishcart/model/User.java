@@ -13,8 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -24,11 +22,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class User implements UserDetails {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue
@@ -43,6 +36,7 @@ public class User implements UserDetails {
 
 	@Email
 	@NotNull(message = "Email should not be null!")
+	@Column(unique = true)
 	private String email;
 
 	@NotNull(message = "Mobile number is mandatory")
@@ -55,13 +49,6 @@ public class User implements UserDetails {
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	
-	@OneToOne(mappedBy = "customer")
-    private Cart cart;
-	
-	@JsonIgnore
-	@OneToOne(mappedBy = "customer")
-    private Wishlist wishlist;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

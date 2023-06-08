@@ -2,8 +2,6 @@ package com.wishcart.config;
 
 import java.io.IOException;
 
-import com.wishcart.exception.TokenException;
-import com.wishcart.exception.UserException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.wishcart.model.Token;
 import com.wishcart.repository.TokenRepository;
 
 import jakarta.servlet.FilterChain;
@@ -30,11 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final TokenRepository tokenRepository;
 
 	@Override
-	protected void doFilterInternal(
-			@NonNull HttpServletRequest request,
-			@NonNull HttpServletResponse response,
-			@NonNull FilterChain filterChain
-	) throws ServletException, IOException {
+	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+			@NonNull FilterChain filterChain) throws ServletException, IOException {
 
 		final String authHeader = request.getHeader("Authorization");
 		final String jwt;
@@ -42,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 			filterChain.doFilter(request, response);
-			throw new TokenException("Invalid token");
+			return;
 		}
 
 		jwt = authHeader.substring(7);
@@ -51,10 +47,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-			boolean isTokenExpired = tokenRepository.findByToken(jwt)
-					.map(t -> !t.isExpired() && !t.isRevoked()).orElse(false);
+			Token token = tokenRepository.findByToken(jwt).orElse(null);
+			
+			boolean isTokenValid;
+			
+			if(token == null) {
+				isTokenValid = false;
+			}else isTokenValid = true;
 
-			if (jwtService.isTokenValid(jwt, userDetails) && isTokenExpired) {
+			if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
 						null, userDetails.getAuthorities());
 
@@ -65,7 +66,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		filterChain.doFilter(request, response);
-        throw new UserException("Unauthorized user");
 
 	}
 

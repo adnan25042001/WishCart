@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl {
+public class AuthenticationService {
 
 	private final UserRepository userRepository;
 	private final TokenRepository tokenRepository;
@@ -33,6 +33,8 @@ public class AuthenticationServiceImpl {
 	private final AuthenticationManager authenticationManager;
 
 	public AuthenticationResponse register(RegisterRequest request) {
+
+		System.out.println(request);
 
 		Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
 
@@ -53,7 +55,11 @@ public class AuthenticationServiceImpl {
 				.email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
 				.address(request.getAddress()).mobile(request.getMobile()).role(role).build();
 
+		System.out.println(user);
+
 		User savedUser = userRepository.save(user);
+
+		System.out.println(savedUser);
 
 		var jwtToken = jwtService.generateToken(user);
 
@@ -80,8 +86,7 @@ public class AuthenticationServiceImpl {
 	}
 
 	private void saveUserToken(User user, String jwtToken) {
-		Token token = Token.builder().token(jwtToken).tokenType(TokenType.BEARER).expired(false).revoked(false)
-				.user(user).build();
+		Token token = Token.builder().token(jwtToken).tokenType(TokenType.BEARER).user(user).build();
 
 		tokenRepository.save(token);
 	}
