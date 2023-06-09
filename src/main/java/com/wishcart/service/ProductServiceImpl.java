@@ -11,10 +11,8 @@ import com.wishcart.dto.UpdateProductDto;
 import com.wishcart.exception.CategoryException;
 import com.wishcart.exception.ProductException;
 import com.wishcart.exception.UserException;
-import com.wishcart.model.Category;
 import com.wishcart.model.Image;
 import com.wishcart.model.Product;
-import com.wishcart.model.Role;
 import com.wishcart.model.SuccessMessage;
 import com.wishcart.model.User;
 import com.wishcart.repository.CategoryRepository;
@@ -34,10 +32,12 @@ public class ProductServiceImpl implements ProductService {
 	private final UserRepository userRepository;
 
 	@Override
-	public SuccessMessage addProduct(ProductDto product) {
+	public SuccessMessage addProduct(ProductDto product, String email) {
+
+		var seller = getUser(email);
 
 		var newProduct = Product.builder().productName(product.getProductName()).description(product.getDescription())
-				.price(product.getPrice())
+				.price(product.getPrice()).seller(seller)
 				.images(product.getImages().stream().map((i) -> imageRepository.save(Image.builder().url(i).build()))
 						.collect(Collectors.toSet()))
 				.categories(product.getCategoryId().stream()
@@ -51,10 +51,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public SuccessMessage removeProduct(Long id) throws ProductException {
+	public SuccessMessage removeProduct(Long id, String email) throws ProductException {
+
+		var seller = getUser(email);
 
 		var product = productRepository.findById(id)
 				.orElseThrow(() -> new ProductException("Invalid product id: " + id));
+
+		if (!product.getSeller().equals(seller))
+			throw new ProductException("Invalid product id: " + id);
 
 		productRepository.delete(product);
 
@@ -63,38 +68,49 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public SuccessMessage getProductById(Long id) throws ProductException {
+	public SuccessMessage getProductById(Long id, String email) throws ProductException {
+
+		var seller = getUser(email);
 
 		var product = productRepository.findById(id)
 				.orElseThrow(() -> new ProductException("Invalid product id: " + id));
+
+		if (seller.getRole().name().equalsIgnoreCase("seller")) {
+			if (seller.getId() == product.getSeller().getId()) {
+				return SuccessMessage.builder().data(List.of(product)).size(1).success(true).build();
+			} else {
+				throw new ProductException("Invalid product id: " + id);
+			}
+		}
 
 		return SuccessMessage.builder().data(List.of(product)).size(1).success(true).build();
 
 	}
 
 	@Override
-	public SuccessMessage getProductById(Long id, Role role) throws ProductException {
-
-		var product = productRepository.findById(id)
-				.orElseThrow(() -> new ProductException("Invalid product id: " + id));
-
-		if ("seller".equalsIgnoreCase(role.name()) && (product.getSeller().getRole().name()).equals(role.name())) {
-
-			return SuccessMessage.builder().data(List.of(product)).size(1).success(true).build();
-
-		}
-
-		throw new ProductException("Invalid product id: " + id);
-
-	}
-
-	@Override
-	public SuccessMessage getProductByName(String name) throws ProductException {
+	public SuccessMessage getProductByName(String name, String email) throws ProductException {
 
 		var products = productRepository.searchProduct(name);
 
 		if (products.isEmpty())
-			throw new ProductException("Product not found by name : " + name);
+			throw new ProductException("Product not found by name :" + name);
+
+		var seller = getUser(email);
+
+		if (seller.getRole().name().equalsIgnoreCase("seller")) {
+
+			List<Product> sellerProducts = new ArrayList<>();
+			for (Product p : products) {
+				if (p.getSeller().getId() == seller.getId()) {
+					sellerProducts.add(p);
+				}
+			}
+			if (sellerProducts.size() == 0)
+				throw new ProductException("Product not found by name: " + name);
+
+			return SuccessMessage.builder().success(true).data(sellerProducts).size(sellerProducts.size()).build();
+
+		}
 
 		return SuccessMessage.builder().success(true).data(products).size(products.size()).build();
 
@@ -113,45 +129,80 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public SuccessMessage getAllProducts() throws ProductException {
+	public SuccessMessage getAllProducts(String email) throws ProductException {
 
 		var products = productRepository.findAll();
 
 		if (products.isEmpty())
 			throw new ProductException("Products not found");
 
+		var seller = getUser(email);
+
+		if (seller.getRole().name().equalsIgnoreCase("seller")) {
+
+			List<Product> sellerProducts = new ArrayList<>();
+			for (Product p : products) {
+				if (p.getSeller().getId() == seller.getId()) {
+					sellerProducts.add(p);
+				}
+			}
+			if (sellerProducts.size() == 0)
+				throw new ProductException("Product not found");
+
+			return SuccessMessage.builder().success(true).data(sellerProducts).size(sellerProducts.size()).build();
+
+		}
+
 		return SuccessMessage.builder().success(true).data(products).size(products.size()).build();
 
 	}
 
 	@Override
-	public SuccessMessage getProductsByCategoryId(Long cid) throws ProductException, CategoryException {
+	public SuccessMessage getProductsByCategoryId(Long cid, String email) throws ProductException, CategoryException {
 
-		var products = productRepository.findAll();
+		var category = categoryRepository.findById(cid)
+				.orElseThrow(() -> new CategoryException("Wrong category id: " + cid));
 
-		var productList = new ArrayList<>();
+		var products = productRepository.findByCategories(List.of(category));
 
-		for (Product p : products) {
-			for (Category c : p.getCategories()) {
-				if (c.getId() == cid) {
-					productList.add(p);
+		if (products.size() == 0)
+			throw new ProductException("Product not found with category id: " + cid);
+
+		var seller = getUser(email);
+
+		if (seller.getRole().name().equalsIgnoreCase("seller")) {
+
+			List<Product> sellerProducts = new ArrayList<>();
+			for (Product p : products) {
+				if (p.getSeller().getId() == seller.getId()) {
+					sellerProducts.add(p);
 				}
 			}
+			if (sellerProducts.size() == 0)
+				throw new ProductException("Product not found with category id: " + cid);
+
+			return SuccessMessage.builder().success(true).data(sellerProducts).size(sellerProducts.size()).build();
+
 		}
 
-		if (productList.size() == 0) {
+		if (products.size() == 0) {
 			throw new ProductException("Product not found with category id: " + cid);
 		}
 
-		return SuccessMessage.builder().success(true).data(productList).size(productList.size()).build();
+		return SuccessMessage.builder().success(true).data(products).size(products.size()).build();
 
 	}
 
 	@Override
-	public SuccessMessage updateProduct(UpdateProductDto product) throws ProductException {
+	public SuccessMessage updateProduct(UpdateProductDto product, String email) throws ProductException {
+
+		var seller = getUser(email);
 
 		var prod = productRepository.findById(product.getId())
 				.orElseThrow(() -> new ProductException("Invalid product id: " + product.getId()));
+
+		if (seller.getId() != prod.getSeller().getId())
+			throw new UserException("Unauthorized");
 
 		if (!product.getProductName().equals(null)) {
 			prod.setProductName(product.getProductName());
@@ -175,10 +226,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public SuccessMessage updateProductPrice(Long id, Double price) throws ProductException {
+	public SuccessMessage updateProductPrice(Long id, Double price, String email) throws ProductException {
+
+		var seller = getUser(email);
 
 		var product = productRepository.findById(id)
 				.orElseThrow(() -> new ProductException("Invalid product id: " + id));
+
+		if (seller.getId() != product.getSeller().getId())
+			throw new UserException("Unauthorized");
 
 		product.setPrice(price);
 
@@ -186,19 +242,8 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
-	@Override
-	public SuccessMessage getProductsBySellerId(Long sid) throws ProductException {
-
-		User seller = userRepository.findById(sid).orElseThrow(() -> new UserException("Invalid seller id: " + sid));
-
-		var products = productRepository.findBySeller(seller);
-
-		if (products.size() == 0) {
-			throw new ProductException("Product not found");
-		}
-
-		return SuccessMessage.builder().success(true).size(1).data(List.of(products)).build();
-
+	private User getUser(String email) {
+		return userRepository.findByEmail(email).orElseThrow(() -> new UserException("User not found"));
 	}
 
 }
