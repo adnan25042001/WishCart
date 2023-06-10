@@ -44,14 +44,15 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public SuccessMessage updateProductQuantity(Long productId, Integer quantity, String email)
+	public SuccessMessage updateProductQuantity(Long cartId, Integer quantity, String email)
 			throws ProductException, CartException {
 
 		var user = getUser(email);
-		var product = getProduct(productId);
 
-		var cart = cartRepository.findByUserAndProduct(user, product)
-				.orElseThrow(() -> new CartException("Product not present in cart"));
+		var cart = cartRepository.findById(cartId).orElseThrow(() -> new CartException("Product not present in cart"));
+
+		if (user.getId() != cart.getUser().getId())
+			throw new UserException("Unauthorized");
 
 		cart.setQuantity(quantity);
 

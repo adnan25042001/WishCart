@@ -12,6 +12,6 @@ public interface WishlistService {
 
 	public SuccessMessage getWishlistOfUser(String email);
 	
-	public SuccessMessage addToCart(Long productId, String email) throws ProductException;
+	public SuccessMessage addToCart(Long wishlistId, String email) throws ProductException;
 
 }

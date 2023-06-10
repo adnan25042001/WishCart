@@ -8,7 +8,7 @@ public interface CartService {
 
 	public SuccessMessage addToCart(Long productId, Integer quantity, String email) throws ProductException;
 
-	public SuccessMessage updateProductQuantity(Long productId, Integer quantity, String email)
+	public SuccessMessage updateProductQuantity(Long cartId, Integer quantity, String email)
 			throws ProductException, CartException;
 
 	public SuccessMessage removeFromCart(Long cartId, String email) throws ProductException, CartException;
