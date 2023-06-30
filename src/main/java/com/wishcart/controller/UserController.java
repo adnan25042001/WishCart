@@ -17,41 +17,63 @@ import com.wishcart.service.CartService;
 import com.wishcart.service.ProductService;
 import com.wishcart.service.WishlistService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
 	private final ProductService productService;
 	private final CartService cartService;
 	private final WishlistService wishlistService;
 
+	@Operation(
+			description = "It takes product id as a parameter",
+			summary = "Endpoint for getting a product"
+	)
 	@GetMapping("/product")
 	public ResponseEntity<SuccessMessage> getProductByIdHandler(@RequestParam("id") Long id, Principal principal) {
 		String email = principal.getName();
 		return new ResponseEntity<SuccessMessage>(productService.getProductById(id, email), HttpStatus.OK);
 	}
 
+	@Operation(
+			description = "It takes query as a parameter",
+			summary = "Endpoint for getting product list"
+	)
 	@GetMapping("/product/search")
 	public ResponseEntity<SuccessMessage> getProductByIdHandler(@RequestParam("q") String name, Principal principal) {
 		String email = principal.getName();
 		return new ResponseEntity<SuccessMessage>(productService.getProductByName(name, email), HttpStatus.OK);
 	}
 
+	@Operation(
+			summary = "Endpoint for getting product list"
+	)
 	@GetMapping("/products/getall")
 	public ResponseEntity<SuccessMessage> getAllProductHandler(Principal principal) {
 		String email = principal.getName();
 		return new ResponseEntity<SuccessMessage>(productService.getAllProducts(email), HttpStatus.OK);
 	}
 
+	@Operation(
+			description = "It takes minimum price and maximum as a parameter",
+			summary = "Endpoint for getting product list"
+	)
 	@GetMapping("/product/betweenprice")
 	public ResponseEntity<SuccessMessage> getProductBetweenPriceHandler(@RequestParam("min") Double min,
 			@RequestParam("max") Double max) {
 		return new ResponseEntity<SuccessMessage>(productService.getProductBetweenPrice(min, max), HttpStatus.OK);
 	}
 
+	@Operation(
+			description = "It takes category id as a parameter",
+			summary = "Endpoint for getting product list"
+	)
 	@GetMapping("/products/bycategory")
 	public ResponseEntity<SuccessMessage> getAllProductByCategoryHandler(@RequestParam("id") Long id,
 			Principal principal) {

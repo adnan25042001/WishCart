@@ -11,6 +11,7 @@ import com.wishcart.dto.UpdateProductDto;
 import com.wishcart.exception.CategoryException;
 import com.wishcart.exception.ProductException;
 import com.wishcart.exception.UserException;
+import com.wishcart.model.Category;
 import com.wishcart.model.Image;
 import com.wishcart.model.Product;
 import com.wishcart.model.SuccessMessage;
@@ -160,10 +161,9 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public SuccessMessage getProductsByCategoryId(Long cid, String email) throws ProductException, CategoryException {
 
-		var category = categoryRepository.findById(cid)
-				.orElseThrow(() -> new CategoryException("Wrong category id: " + cid));
+		categoryRepository.findById(cid).orElseThrow(() -> new CategoryException("Wrong category id: " + cid));
 
-		var products = productRepository.findByCategories(List.of(category));
+		List<Product> products = productRepository.findAll();
 
 		if (products.size() == 0)
 			throw new ProductException("Product not found with category id: " + cid);
@@ -175,9 +175,15 @@ public class ProductServiceImpl implements ProductService {
 			List<Product> sellerProducts = new ArrayList<>();
 			for (Product p : products) {
 				if (p.getSeller().getId() == seller.getId()) {
-					sellerProducts.add(p);
+					for (Category c : p.getCategories()) {
+						if (c.getId() == cid) {
+							sellerProducts.add(p);
+							break;
+						}
+					}
 				}
 			}
+
 			if (sellerProducts.size() == 0)
 				throw new ProductException("Product not found with category id: " + cid);
 
@@ -185,11 +191,22 @@ public class ProductServiceImpl implements ProductService {
 
 		}
 
-		if (products.size() == 0) {
-			throw new ProductException("Product not found with category id: " + cid);
+		List<Product> productListByCategory = new ArrayList<>();
+
+		for (Product p : products) {
+			for (Category c : p.getCategories()) {
+				if (c.getId() == cid) {
+					productListByCategory.add(p);
+					break;
+				}
+			}
 		}
 
-		return SuccessMessage.builder().success(true).data(products).size(products.size()).build();
+		if (productListByCategory.size() == 0)
+			throw new ProductException("Product not found with category id: " + cid);
+
+		return SuccessMessage.builder().success(true).data(productListByCategory).size(productListByCategory.size())
+				.build();
 
 	}
 
